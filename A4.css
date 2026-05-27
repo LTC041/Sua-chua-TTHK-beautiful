@@ -1,0 +1,386 @@
+@page {
+  size: A4;
+}
+
+@media print {
+  body {
+    background: #fff !important;
+  }
+
+  button {
+    display: none !important;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #ccc;
+  color: #000;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 14pt;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+p {
+  margin: 0;
+}
+
+input {
+  font-family: "Times New Roman", Times, serif !important;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  margin: 0;
+}
+
+button {
+  margin-top: 4px;
+  margin-right: 4px;
+}
+
+.color-text-kh {
+  color: white !important;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.fix-same-word {
+  margin: 0;
+  text-indent: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  outline: none;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-indent: 0 !important;
+}
+
+.flex-beetwen {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-around {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.text-title-12 {
+  font-size: 12pt !important;
+}
+
+.text-title-13 {
+  font-size: 13pt !important;
+}
+
+.text-title-14 {
+  font-size: 14pt !important;
+}
+
+.text-title-15 {
+  font-size: 15pt !important;
+}
+
+div.WordSection1,
+div.WordSection2,
+div.WordSection3,
+div.WordSection4,
+div.WordSection5 {
+  background-color: #fff;
+  padding: 2cm 2cm 2cm 3cm;
+  position: relative;
+  page-break-before: always;
+  break-before: page;
+}
+
+.header-page,
+.header-page-buy {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.header-page {
+  position: absolute;
+  right: 16px;
+  left: 16px;
+}
+
+.left-header-page,
+.left-header-page-buy {
+  width: fit-content;
+}
+
+.left-header-page p,
+.left-header-page-buy p,
+.right-header-page p,
+.right-header-page-buy p {
+  margin: 2px 0 !important;
+  line-height: 100%;
+  font-size: 13pt;
+}
+
+.left-header-page p,
+.left-header-page-buy p,
+.right-header-page p,
+.right-header-page-buy p {
+  font-weight: bold;
+}
+
+.left-header-page p:first-child,
+.left-header-page-buy p:first-child {
+  font-weight: normal;
+  text-transform: uppercase;
+}
+
+.left-header-page p,
+.left-header-page-buy p {
+  text-transform: uppercase;
+}
+
+.number-room {
+  font-size: 16px;
+  font-weight: 500 !important;
+  text-transform: none !important;
+}
+
+.main-page {
+  margin-top: 100px;
+}
+
+.main-page .title-main-page {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 6px !important;
+}
+
+.Can-cu {
+  text-align: justify;
+}
+
+.Can-cu p {
+  text-indent: 1.27cm;
+  text-wrap: pretty;
+}
+
+#table1,
+#table2,
+#table3,
+#table4 {
+  table-layout: auto !important;
+}
+
+#table1 th,
+#table1 td,
+#table2 th,
+#table2 td,
+#table3 th,
+#table3 td,
+#table4 th,
+#table4 td {
+  white-space: normal !important;
+  word-break: keep-all !important;
+  overflow-wrap: break-word !important;
+  vertical-align: middle;
+}
+
+div.WordSection1 table,
+div.WordSection2 table,
+div.WordSection3 table,
+div.WordSection4 table {
+  border-collapse: collapse;
+  font-size: 12pt !important;
+}
+
+div.WordSection1 table,
+div.WordSection2 table {
+  width: calc(100% + 40px);
+  margin-left: -20px;
+  margin-right: -20px;
+}
+
+div.WordSection3 table {
+  width: calc(100% + 40px);
+  margin-left: -22px;
+  margin-right: -40px;
+}
+
+div.WordSection4 table {
+  width: calc(100% + 110px);
+  margin-left: -70px;
+  margin-right: -20px;
+}
+
+div.WordSection1 th,
+div.WordSection1 td,
+div.WordSection2 th,
+div.WordSection2 td,
+div.WordSection3 th,
+div.WordSection3 td,
+div.WordSection4 th,
+div.WordSection4 td {
+  border: 1px solid black;
+  text-align: center;
+}
+
+div.WordSection1 th,
+div.WordSection1 td,
+div.WordSection2 th,
+div.WordSection2 td,
+div.WordSection4 th,
+div.WordSection4 td {
+  padding: 8px;
+}
+
+div.WordSection3 th,
+div.WordSection3 td {
+  padding: 4px;
+}
+
+div.WordSection2 th,
+div.WordSection2 td,
+div.WordSection3 th,
+div.WordSection3 td {
+  font-size: 12pt;
+}
+
+div.WordSection2 input,
+div.WordSection3 input,
+div.WordSection4 input {
+  border: #fff;
+  font-size: 12pt;
+  font-family: "Times New Roman", Times, serif;
+  justify-items: center;
+}
+
+div.WordSection2 input,
+div.WordSection4 input {
+  width: 10px;
+}
+
+div.WordSection3 input {
+  width: 14px;
+}
+
+#input1,
+#input2 {
+  width: 30px;
+}
+
+div.WordSection2 ul > li {
+  margin-bottom: 1px;
+}
+
+div.WordSection3 > .header-page-buy {
+  width: calc(100% + 80px);
+  margin-left: -75px;
+  margin-right: -40px;
+}
+
+div.WordSection3 > .header-page-buy .left-header-page-buy,
+div.WordSection3 > .header-page-buy .right-header-page-buy {
+  white-space: nowrap;
+}
+
+.footer-page {
+  margin-top: 16px;
+}
+
+.footer-page p {
+  font-weight: bold;
+}
+
+.left-ft-page p:first-child,
+.right-ft-page p:first-child {
+  height: 140px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.footer-page-buy {
+  width: calc(100% + 40px);
+  margin-left: -24px;
+  margin-right: -20px;
+  font-weight: bold;
+}
+
+.footer-page-buy p {
+  font-size: 13pt !important;
+}
+
+.footer-page-buy .sign-boss p,
+.sign-boss p {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.plan-office p:first-child {
+  text-transform: uppercase;
+}
+
+.printerName,
+.break-after-print {
+  text-wrap: balance;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  height: 90%;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal iframe {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.modal-buttons {
+  padding: 10px 0;
+  text-align: right;
+}
