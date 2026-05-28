@@ -15,11 +15,11 @@ function loadSelectedPrinter() {
   }
 }
 
-function setText(className, value) {
+const setText = (className, value) => {
   document.querySelectorAll(`.${className}`).forEach((element) => {
-    element.textContent = value || "N/A";
+    element.textContent = value === undefined || value === null ? "" : value;
   });
-}
+};
 
 function applySelectedPrinterData() {
   const printerData = loadSelectedPrinter();
@@ -76,7 +76,8 @@ function updateMainRequestSignature() {
   const requesterElement = section.querySelector(".requester");
   if (!requesterElement) return;
 
-  const isLeTuanCuong = requesterElement.textContent.trim().toLowerCase() === "lê tuấn cường";
+  const isLeTuanCuong =
+    requesterElement.textContent.trim().toLowerCase() === "lê tuấn cường";
   if (!isLeTuanCuong) return;
 
   const signatureDiv = section.querySelector(".none-sign");
@@ -98,7 +99,9 @@ function hideOfficerNguyenThiThu() {
 }
 
 function getDataRows(table) {
-  return Array.from(table.rows).filter((row) => row.querySelectorAll("td").length > 0);
+  return Array.from(table.rows).filter(
+    (row) => row.querySelectorAll("td").length > 0,
+  );
 }
 
 function resetCellContent(cell, cellIndex, nextIndex) {
@@ -144,7 +147,11 @@ function resetFormControl(control) {
 }
 
 function refreshControlIdentifier(control, rowIndex, controlIndex) {
-  const baseId = control.id || control.name || control.dataset.id || control.tagName.toLowerCase();
+  const baseId =
+    control.id ||
+    control.name ||
+    control.dataset.id ||
+    control.tagName.toLowerCase();
   const suffix = `_${rowIndex}_${controlIndex}`;
 
   if (control.id) control.id = `${baseId}${suffix}`;
@@ -186,7 +193,10 @@ function updateThuHoiSignature() {
   document.querySelectorAll(".requester").forEach((requesterElement) => {
     const requesterName = requesterElement.textContent.trim();
     const requesterBlock = requesterElement.closest(".ben-giao-requester");
-    const ngocNgaBlock = findNextSiblingByClass(requesterBlock, "ben-giao-ngocnga");
+    const ngocNgaBlock = findNextSiblingByClass(
+      requesterBlock,
+      "ben-giao-ngocnga",
+    );
 
     if (requesterName === "Dương Thị Lan Thu") {
       requesterBlock?.classList.add("hidden");
@@ -214,7 +224,9 @@ function pastePlainText(event) {
   if (!editable) return;
 
   event.preventDefault();
-  const text = (event.clipboardData || window.clipboardData).getData("text/plain");
+  const text = (event.clipboardData || window.clipboardData).getData(
+    "text/plain",
+  );
   insertTextAtCursor(editable, text);
 }
 

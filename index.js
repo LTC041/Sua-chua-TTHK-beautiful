@@ -15,7 +15,14 @@ const EXCEL_COLUMN_INDEX = {
   monthW4: 9,
 };
 
-const REQUIRED_FIELDS = Object.keys(EXCEL_COLUMN_INDEX);
+const REQUIRED_FIELDS = [
+  "department",
+  "shortDepartment",
+  "requester",
+  "officer",
+  "representative",
+  "representativeStaff",
+];
 
 function getElement(id) {
   return document.getElementById(id);
@@ -23,6 +30,22 @@ function getElement(id) {
 
 function saveJson(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
+}
+
+function cleanExcelValue(value) {
+  if (value === undefined || value === null) return "";
+
+  const text = String(value);
+
+  // Nếu trong Excel cố ý nhập &nbsp; thì chuyển thành khoảng trắng không ngắt dòng
+  if (text.includes("&nbsp;")) {
+    return text.replace(/&nbsp;/gi, "\u00A0");
+  }
+
+  return text
+    .replace(/\u00A0/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function loadJson(key, fallback = null) {
@@ -45,10 +68,7 @@ function readExcelFile(file) {
     const sheet = workbook.Sheets[firstSheetName];
     const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-    const dataRows = rows
-      .slice(3)
-      .map(mapExcelRow)
-      .filter(hasRequiredData);
+    const dataRows = rows.slice(3).map(mapExcelRow).filter(hasRequiredData);
 
     saveJson(STORAGE_KEYS.printerData, dataRows);
     renderTable(dataRows);
@@ -59,7 +79,10 @@ function readExcelFile(file) {
 
 function mapExcelRow(row) {
   return Object.fromEntries(
-    Object.entries(EXCEL_COLUMN_INDEX).map(([key, index]) => [key, row[index] || ""]),
+    Object.entries(EXCEL_COLUMN_INDEX).map(([key, index]) => [
+      key,
+      cleanExcelValue(row[index]),
+    ]),
   );
 }
 
@@ -232,7 +255,9 @@ function closeHistoryModal() {
 }
 
 function getFilteredHistory() {
-  const keyword = (getElement("historySearch").value || "").trim().toLowerCase();
+  const keyword = (getElement("historySearch").value || "")
+    .trim()
+    .toLowerCase();
   const history = getHistory();
 
   if (!keyword) return history;
