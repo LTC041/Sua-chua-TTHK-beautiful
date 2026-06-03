@@ -307,6 +307,30 @@ div.WordSection3 > .header-page-buy .right-header-page-buy {
   white-space: nowrap;
 }
 
+.noi-nhan {
+  margin-top: 20px;
+  margin-left: 8px;
+  font-family: "Times New Roman", Times, serif;
+  line-height: 1.15;
+  text-indent: 0 !important;
+}
+
+.noi-nhan p {
+  margin: 0;
+  text-indent: 0 !important;
+  font-weight: normal;
+}
+
+.noi-nhan-title {
+  font-size: 12pt;
+  font-weight: bold !important;
+  font-style: italic;
+}
+
+.noi-nhan-line {
+  font-size: 11pt;
+}
+
 .footer-page {
   margin-top: 16px;
 }
@@ -323,9 +347,9 @@ div.WordSection3 > .header-page-buy .right-header-page-buy {
 }
 
 .footer-page-buy {
-  width: calc(100% + 40px);
+  /* width: calc(100% + 40px);
   margin-left: -24px;
-  margin-right: -20px;
+  margin-right: -20px; */
   font-weight: bold;
 }
 
