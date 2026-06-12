@@ -352,6 +352,12 @@ div.WordSection3 > .header-page-buy .right-header-page-buy {
   font-weight: bold;
 }
 
+.signature-col {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  box-sizing: border-box;
+}
 .footer-page-buy p {
   font-size: 13pt !important;
 }
@@ -368,7 +374,8 @@ div.WordSection3 > .header-page-buy .right-header-page-buy {
 
 .printerName,
 .break-after-print {
-  text-wrap: balance;
+  text-wrap: pretty;
+  text-align: justify !important;
 }
 
 .modal {
