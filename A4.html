@@ -3,31 +3,44 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Xuất Hồ Sơ</title>
+    <title>Xuất hồ sơ</title>
     <link rel="stylesheet" href="./A4.css" />
   </head>
-  <body>
-    <div class="WordSection3">
+  <body spellcheck="false">
+    <!--
+      Quy ước (xem A4.js):
+      - data-field="x"      nội dung tự điền từ bảng điều khiển, bấm vào để sửa nhanh.
+      - data-persist="x"    đoạn soạn sẵn: sửa trực tiếp, bấm "Lưu làm mẫu" để dùng cho các lần sau.
+      - data-hidden-by="x"  vẫn giữ chỗ ký nhưng không in tên khi tuỳ chọn x bật.
+      - data-shown-by="x"   chỉ hiện khi tuỳ chọn x bật.
+      - table[data-table]   bảng thêm/xoá dòng được; data-col đánh dấu cột tự điền giữa các bảng.
+    -->
+
+    <!-- ===================== 1. TỜ TRÌNH ===================== -->
+    <section
+      class="page WordSection3 is-first-printed"
+      data-doc="toTrinh"
+      data-title="Tờ trình"
+    >
       <div class="header-page-buy">
         <div class="left-header-page-buy flex-column">
           <p class="text-title-12">TRUNG TÂM THÔNG BÁO TIN TỨC HÀNG KHÔNG</p>
           <p
-            class="text-title-12 department"
+            class="text-title-12"
             style="border-bottom: 0.5px solid #000; margin-bottom: 10px"
+            data-field="department"
           ></p>
-
           <p
-            contenteditable="true"
             style="
               margin-top: 8px;
-              display: flex;
-              justify-content: end;
               font-weight: 500;
               text-transform: none;
               font-size: 14pt;
             "
           >
-            Số: &nbsp;&nbsp;&nbsp;/TTr-
+            Số:
+            <span data-field="docNumber" data-blank="&nbsp;&nbsp;&nbsp;"></span
+            >/<span data-field="docSymbol"></span>
           </p>
         </div>
 
@@ -40,31 +53,49 @@
             Độc lập – Tự do – Hạnh phúc
           </p>
           <p
-            contenteditable="true"
             style="
               margin-top: 8px;
-              display: flex;
-              justify-content: end;
               font-style: italic;
               font-weight: 500;
               font-size: 14pt;
             "
           >
-            Hà Nội, ngày &nbsp;&nbsp;&nbsp; tháng &nbsp;&nbsp;&nbsp; năm 2026
+            Hà Nội, ngày
+            <span
+              data-field="toTrinhDay"
+              data-format="day"
+              data-blank="&nbsp;&nbsp;&nbsp;"
+            ></span>
+            tháng
+            <span
+              data-field="toTrinhMonth"
+              data-format="month"
+              data-blank="&nbsp;&nbsp;&nbsp;"
+            ></span>
+            năm <span data-field="year"></span>
           </p>
         </div>
       </div>
+
       <div style="margin-top: 35px" class="main-page">
         <p class="text-title-14 title-main-page">TỜ TRÌNH</p>
-        <p contenteditable="true" class="text-title-14 title-main-page">
-          V/v: Mua giấy nghiệp vụ ngành và mực máy in cho
-          <span class="department"></span>
+        <p
+          class="text-title-14 title-main-page"
+          contenteditable="true"
+          data-persist="toTrinh.subject"
+        >
+          V/v: Mua vật tư sửa chữa cho <span data-field="department"></span>
         </p>
-        <p class="text-title-14" style="text-align: center; margin: 20px 0">
+        <p
+          class="text-title-14"
+          style="text-align: center; margin: 20px 0"
+          contenteditable="true"
+          data-persist="toTrinh.recipient"
+        >
           Kính gửi: Giám đốc
         </p>
 
-        <div class="Can-cu">
+        <div class="Can-cu" contenteditable="true" data-persist="toTrinh.basis">
           <p>
             Căn cứ Quyết định số 2960/QĐ-QLB ngày 23/04/2026 của Tổng giám đốc
             Tổng công ty Quản lý bay Việt Nam về việc ban hành Quy định lựa chọn
@@ -72,310 +103,108 @@
             của Tổng công ty Quản lý bay Việt Nam;
           </p>
           <p>
-            Căn cứ Quyết định số 666/QĐ-THK ngày 25/3/2026 của Giám đốc Trung
-            tâm Thông báo tin tức hàng không về việc triển khai chi tiết các nội
-            dung kế hoạch được Tổng công ty giao năm 2026 cho các đơn vị trực
-            thuộc Trung tâm;
+            Căn cứ Quyết định số 2503/QĐ-THK ngày 15/10/2026 của Giám đốc Trung
+            tâm Thông báo tin tức hàng không về việc Quyết định v/v triển khai
+            các nội dung kế hoạch được Tổng công ty giao điều chỉnh, bổ sung kế
+            hoạch đầu năm 2026 cho Trung tâm Thông báo tin tức hàng không;
           </p>
-          <p>Căn cứ nhu cầu sử dụng của <span class="department"></span>;</p>
-          <p contenteditable="true">
-            <span class="department"></span> kính trình Giám đốc phê duyệt mua
-            giấy nghiệp vụ ngành và mực máy in, cụ thể như sau:
+          <p>Căn cứ nhu cầu sử dụng của <span data-field="department"></span>;</p>
+          <p>
+            <span data-field="department"></span> kính trình Giám đốc phê duyệt
+            mua vật tư sửa chữa, cụ thể như sau:
           </p>
         </div>
+
         <div style="text-indent: 4px">
-          <div
-            class="flex-beetwen"
-            style="margin-top: 40px; margin-bottom: 4px; display: none"
-          >
-            <p class="text-title-14">
-              Tên tôi là: <span class="requester"></span>
-            </p>
-            <span>Chức vụ: Nhân viên</span>
-          </div>
-
-          <p style="margin-bottom: 4px !important; display: none">
-            Bộ phận công tác: <span class="department"></span>
-          </p>
-          <div style="font-size: 14pt; line-height: 1.5; display: none">
-            <p
-              style="white-space: normal; text-indent: 4px"
-              class="fix-same-word"
-              contenteditable="true"
-            >
-              Lý do:,không sử dụng được.
-            </p>
-          </div>
-          <p style="display: none">Đề nghị Giám đốc xem xét và duyệt cấp:</p>
           <div style="margin: 12px 0">
-            <table id="table1">
-              <tr>
-                <th rowspan="2">STT</th>
-                <th style="width: 199px" rowspan="2">
-                  Tên hàng hoá (bao gồm nhãn hiệu, quy cách)
-                </th>
-                <th rowspan="2">Mã số</th>
-                <th rowspan="2">ĐVT</th>
-                <th colspan="2">Số lượng</th>
-                <th rowspan="2">Giá trị kế hoạch<br />(nếu có)</th>
-                <th rowspan="2">Ghi chú</th>
-              </tr>
-              <tr>
-                <th style="white-space: nowrap">Yêu cầu</th>
-                <th>Duyệt</th>
-              </tr>
-              <tr>
-                <td contenteditable="true" style="word-break: break-word">1</td>
-                <td
-                  contenteditable="true"
-                  style="word-break: break-word"
-                  class="break-after-print"
-                ></td>
-
-                <td></td>
-                <td contenteditable="true" style="white-space: nowrap"></td>
-                <td><input id="input1" type="text" value="01" /></td>
-                <td></td>
-                <td contenteditable="true" style="white-space: nowrap"></td>
-                <td></td>
-              </tr>
+            <table id="table1" data-table="supplies">
+              <thead>
+                <tr>
+                  <th rowspan="2">STT</th>
+                  <th style="width: 199px" rowspan="2">
+                    Tên hàng hoá (bao gồm nhãn hiệu, quy cách)
+                  </th>
+                  <th rowspan="2">Mã số</th>
+                  <th rowspan="2">ĐVT</th>
+                  <th colspan="2">Số lượng</th>
+                  <th rowspan="2">Giá trị kế hoạch<br />(nếu có)</th>
+                  <th rowspan="2">Ghi chú</th>
+                </tr>
+                <tr>
+                  <th>Yêu cầu</th>
+                  <th>Duyệt</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="col-stt"></td>
+                  <td
+                    contenteditable="true"
+                    class="break-after-print"
+                    data-col="name"
+                  ></td>
+                  <td contenteditable="true"></td>
+                  <td contenteditable="true" data-col="unit"></td>
+                  <td contenteditable="true" data-col="qty">01</td>
+                  <td contenteditable="true"></td>
+                  <td contenteditable="true"></td>
+                  <td contenteditable="true"></td>
+                </tr>
+              </tbody>
             </table>
-            <button onclick="addRow('table1')">Thêm dòng cho bảng 1</button>
-            <button onclick="deleteRow('table1')">Xoá dòng bảng 1</button>
-            <p
-              contenteditable="true"
-              style="
-                margin-top: 8px;
-                display: flex;
-                justify-content: end;
-                font-style: italic;
-                display: none;
-              "
-            >
-              Hà Nội, ngày &nbsp;&nbsp;&nbsp; tháng &nbsp;&nbsp;&nbsp; năm 2026
-            </p>
           </div>
         </div>
       </div>
 
       <div
-        style="
-          justify-content: unset;
-          width: 100%;
-          margin-top: 20px;
-          display: flex;
-        "
         class="footer-page-buy"
+        style="display: flex; width: 100%; margin-top: 20px"
       >
         <div class="sign-boss signature-col">
-          <p>Giám đốc</p>
+          <p contenteditable="true" data-persist="toTrinh.signDirector">
+            Giám đốc
+          </p>
         </div>
         <div class="flex-column plan-office signature-col">
-          <p style="height: 140px">Phòng kế hoạch</p>
-          <p class="color-text-kh">Phan Nhật Mạnh</p>
+          <p
+            style="height: 140px"
+            contenteditable="true"
+            data-persist="toTrinh.signPlan"
+          >
+            Phòng kế hoạch
+          </p>
+          <p data-field="planOffice" data-hidden-by="planOfficeHidden"></p>
         </div>
-        <div
-          style="justify-items: center"
-          class="flex-column none-sign signature-col"
-        >
+        <div class="flex-column signature-col" data-shown-by="showUnitColumn">
           <p
             style="text-transform: uppercase; height: 140px"
-            class="department-short break-after-trung-tam"
+            data-field="shortDepartment"
+            data-format="trung-tam"
           ></p>
-          <p class="officer"></p>
+          <p data-field="officer" data-hidden-by="hideOfficer"></p>
         </div>
       </div>
+
       <div class="noi-nhan">
         <p class="noi-nhan-title">Nơi nhận:</p>
-        <p class="noi-nhan-line">- Như trên;</p>
-        <p class="noi-nhan-line">- Văn phòng;</p>
-        <p contenteditable="true" class="noi-nhan-line">- Lưu: VP (03b).</p>
-      </div>
-    </div>
-    <div class="WordSection2">
-      <div class="header-page">
-        <div class="left-header-page flex-column">
-          <p class="text-title-12">TRUNG TÂM THÔNG BÁO TIN TỨC HÀNG KHÔNG</p>
-          <p
-            class="text-title-12"
-            style="border-bottom: 1px solid #000; margin-bottom: 10px"
-          >
-            Phòng Bảo đảm kỹ thuật
-          </p>
-        </div>
-
-        <div class="right-header-page flex-column">
-          <p class="text-title-12">CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM</p>
-          <p
-            class="text-title-13"
-            style="border-bottom: 1px solid #000; margin-bottom: 10px"
-          >
-            Độc lập – Tự do – Hạnh phúc
-          </p>
+        <div
+          class="noi-nhan-lines"
+          contenteditable="true"
+          data-persist="toTrinh.recipients"
+        >
+          <p>- Như trên;</p>
+          <p>- Văn phòng;</p>
+          <p>- Lưu: VP (03b).</p>
         </div>
       </div>
-      <div class="main-page">
-        <p class="text-title-14 title-main-page">
-          BIÊN BẢN KIỂM TRA KỸ THUẬT VẬT TƯ <br />
-          THIẾT BỊ TRƯỚC KHI SỬA CHỮA
-        </p>
-        <p class="text-title-14" style="text-align: left; margin: 20px 0">
-          - Căn cứ phiếu báo hỏng của <span class="department"></span>.
-        </p>
-        <p style="letter-spacing: -0.5px">
-          Hôm nay, ngày......tháng......năm 2026 tại Trung tâm Thông báo tin tức
-          hàng không.
-        </p>
-        <p style="font-weight: bold; margin-top: 16px; margin-bottom: 4px">
-          Đại diện các bên gồm:
-        </p>
+    </section>
 
-        <p>1. Đại diện đơn vị sử dụng hoặc kho:</p>
-        <div class="flex-beetwen">
-          <p style="margin: 2px 0">
-            - Ông (bà): <span class="representativeStaff"></span>
-          </p>
-          <p>Chức vụ : Nhân viên</p>
-        </div>
-        <p>2. Đại diện đơn vị chức năng:</p>
-        <div class="flex-beetwen">
-          <p style="margin: 2px 0">- Ông (bà): Lê Tuấn Cường</p>
-          <p style="margin-right: 24px">Chức vụ : NVKH</p>
-        </div>
-        <div class="flex-beetwen">
-          <p style="margin: 2px 0">- Ông (bà): Vũ Hải Hà</p>
-          <p style="margin-right: 24px">Chức vụ : NVKT</p>
-        </div>
-        <p style="font-weight: bold; margin-top: 8px; margin-bottom: 4px">
-          Đại diện các bên đã tiến hành kiểm tra, đánh giá các nội dung sau:
-        </p>
-
-        <ul>
-          <li>
-            <p>1. Thông tin về tài sản:</p>
-          </li>
-          <li style="display: flex">
-            <div style="font-size: 14pt; line-height: 1.5">
-              <div
-                style="
-                  display: grid;
-                  grid-template-columns: auto 1fr;
-                  column-gap: 6px;
-                "
-              >
-                <div style="white-space: nowrap">- Tên vật tư thiết bị:</div>
-                <div
-                  contenteditable="true"
-                  style="
-                    white-space: pre-wrap;
-                    word-break: break-word;
-                    outline: none;
-                  "
-                ></div>
-              </div>
-              <div
-                style="
-                  display: grid;
-                  grid-template-columns: auto 1fr;
-                  column-gap: 6px;
-                "
-              >
-                <div style="white-space: nowrap">- Số S/N (nếu có):</div>
-                <div
-                  contenteditable="true"
-                  style="
-                    white-space: pre-wrap;
-                    word-break: break-word;
-                    outline: none;
-                  "
-                ></div>
-              </div>
-            </div>
-          </li>
-          <li>
-            <p>2. Địa điểm lắp đặt: <span class="department"></span></p>
-          </li>
-          <li>
-            <p style="line-height: 1.3">
-              3. Đơn vị sử dụng/quản lý thiết bị:
-              <span class="department"></span>
-            </p>
-          </li>
-          <li>
-            <div style="font-size: 14pt; line-height: 1.3">
-              <p
-                style="white-space: normal"
-                class="fix-same-word"
-                contenteditable="true"
-              >
-                4. Tình trạng hiện tại của thiết bị:
-              </p>
-            </div>
-          </li>
-          <li>
-            <div style="font-size: 14pt; line-height: 1.3">
-              <p
-                style="white-space: normal"
-                contenteditable="true"
-                class="fix-same-word"
-              >
-                5. Phương án thực hiện sửa chữa:
-              </p>
-            </div>
-          </li>
-          <li>
-            <p>6. Kết luận: Đồng ý phương án sửa chữa.</p>
-          </li>
-        </ul>
-
-        <p style="display: none" class="text-title-14 title-main-page">
-          BẢNG YÊU CẦU VẬT TƯ
-        </p>
-        <p style="margin-bottom: 8px; display: none">
-          Đề nghị cung cấp các vật tư, linh kiện sau để phục vụ sửa chữa:
-        </p>
-        <div style="text-indent: 12px; display: none">
-          <table id="table2">
-            <tr>
-              <th>STT</th>
-              <th style="width: 140px">Đơn vị sử dụng</th>
-              <th style="width: 220px">Tên vật tư, linh kiện</th>
-              <th>Quy cách chủng loại, yêu cầu kỹ thuật</th>
-              <th>Số lượng</th>
-            </tr>
-            <tr style="text-align: center">
-              <td>1</td>
-              <td style="text-wrap: balance" class="department-short"></td>
-              <td class="break-after-print">
-                Hộp mực <span class="printerName"></span>
-              </td>
-              <td></td>
-              <td id="quantity">
-                <input id="input1" type="text" value="01" />
-              </td>
-              <!-- Số lượng có id để cập nhật -->
-            </tr>
-          </table>
-          <button onclick="addRow('table2')">Thêm dòng cho bảng 1</button>
-          <button onclick="deleteRow('table2')">Xoá dòng bảng 1</button>
-        </div>
-      </div>
-      <div class="footer-page flex-beetwen">
-        <div style="justify-items: center" class="left-ft-page flex-column">
-          <p class="break-after-trung-tam">PHÒNG KẾ HOẠCH</p>
-          <p class="color-text-kh">Phan Nhật Mạnh</p>
-        </div>
-        <div style="justify-items: center" class="left-ft-page flex-column">
-          <p class="break-after-trung-tam">PHÒNG BĐKT</p>
-          <p>Nguyễn Văn Toàn</p>
-        </div>
-        <div class="right-ft-page flex-column">
-          <p>Đơn vị sử dụng</p>
-          <p class="representative"></p>
-        </div>
-      </div>
-    </div>
-    <div class="WordSection5">
+    <!-- ========== 2. BIÊN BẢN KIỂM TRA TRƯỚC SỬA CHỮA ========== -->
+    <section
+      class="page WordSection2"
+      data-doc="truoc"
+      data-title="Biên bản kiểm tra trước sửa chữa"
+    >
       <div class="header-page">
         <div class="left-header-page flex-column">
           <p class="text-title-12">TRUNG TÂM THÔNG BÁO TIN TỨC HÀNG KHÔNG</p>
@@ -397,17 +226,34 @@
           </p>
         </div>
       </div>
+
       <div class="main-page">
         <p class="text-title-14 title-main-page">
           BIÊN BẢN KIỂM TRA KỸ THUẬT VẬT TƯ <br />
-          THIẾT BỊ SAU KHI SỬA CHỮA
+          THIẾT BỊ TRƯỚC KHI SỬA CHỮA
         </p>
-        <p class="text-title-14" style="text-align: left; margin: 20px 0">
-          - Căn cứ biên bản nghiệm thu bàn giao sản phẩm.
+        <p
+          class="text-title-14"
+          style="text-align: left; margin: 20px 0"
+          contenteditable="true"
+          data-persist="truoc.basis"
+        >
+          - Căn cứ phiếu báo hỏng của <span data-field="department"></span>.
         </p>
         <p style="letter-spacing: -0.5px">
-          Hôm nay, ngày &nbsp;&nbsp;&nbsp; tháng &nbsp;&nbsp;
-          <span class="month"></span> năm 2026 tại Trung tâm Thông báo tin tức
+          Hôm nay, ngày
+          <span
+            data-field="truocDay"
+            data-format="day"
+            data-blank="....."
+          ></span>
+          tháng
+          <span
+            data-field="truocMonth"
+            data-format="month"
+            data-blank="....."
+          ></span>
+          năm <span data-field="year"></span> tại Trung tâm Thông báo tin tức
           hàng không.
         </p>
         <p style="font-weight: bold; margin-top: 16px; margin-bottom: 4px">
@@ -415,20 +261,31 @@
         </p>
 
         <p>1. Đại diện đơn vị sử dụng hoặc kho:</p>
-        <div class="flex-beetwen">
+        <div class="flex-between">
           <p style="margin: 2px 0">
-            - Ông (bà): <span class="representativeStaff"></span>
+            - Ông (bà): <span data-field="representativeStaff"></span>
           </p>
-          <p>Chức vụ : Nhân viên</p>
+          <p>
+            Chức vụ :
+            <span contenteditable="true" data-single-line>Nhân viên</span>
+          </p>
         </div>
         <p>2. Đại diện đơn vị chức năng:</p>
-        <div class="flex-beetwen">
-          <p style="margin: 2px 0">- Ông (bà): Lê Tuấn Cường</p>
-          <p style="margin-right: 24px">Chức vụ : NVKH</p>
+        <div class="flex-between">
+          <p style="margin: 2px 0">
+            - Ông (bà): <span data-field="functional1"></span>
+          </p>
+          <p style="margin-right: 24px">
+            Chức vụ : <span data-field="functional1Position"></span>
+          </p>
         </div>
-        <div class="flex-beetwen">
-          <p style="margin: 2px 0">- Ông (bà): Vũ Hải Hà</p>
-          <p style="margin-right: 24px">Chức vụ : NVKT</p>
+        <div class="flex-between">
+          <p style="margin: 2px 0">
+            - Ông (bà): <span data-field="functional2"></span>
+          </p>
+          <p style="margin-right: 24px">
+            Chức vụ : <span data-field="functional2Position"></span>
+          </p>
         </div>
         <p style="font-weight: bold; margin-top: 8px; margin-bottom: 4px">
           Đại diện các bên đã tiến hành kiểm tra, đánh giá các nội dung sau:
@@ -439,142 +296,247 @@
             <p>1. Thông tin về tài sản:</p>
           </li>
           <li style="display: flex">
-            <div style="font-size: 14pt; line-height: 1.5">
-              <div
-                style="
-                  display: grid;
-                  grid-template-columns: auto 1fr;
-                  column-gap: 6px;
-                "
-              >
-                <div style="white-space: nowrap">- Tên vật tư thiết bị:</div>
-                <div
-                  contenteditable="true"
-                  style="
-                    white-space: pre-wrap;
-                    word-break: break-word;
-                    outline: none;
-                  "
-                ></div>
+            <div class="asset-info">
+              <div class="asset-row">
+                <div class="asset-label">- Tên vật tư thiết bị:</div>
+                <div class="asset-value" data-field="equipmentName"></div>
               </div>
-              <div
-                style="
-                  display: grid;
-                  grid-template-columns: auto 1fr;
-                  column-gap: 6px;
-                "
-              >
-                <div style="white-space: nowrap">- Số S/N (nếu có):</div>
-                <div
-                  contenteditable="true"
-                  style="
-                    white-space: pre-wrap;
-                    word-break: break-word;
-                    outline: none;
-                  "
-                ></div>
+              <div class="asset-row">
+                <div class="asset-label">- Số S/N (nếu có):</div>
+                <div class="asset-value" data-field="serialNumber"></div>
               </div>
             </div>
           </li>
-          <li></li>
-
           <li>
-            <p>2. Địa điểm lắp đặt: <span class="department"></span></p>
+            <p>2. Địa điểm lắp đặt: <span data-field="department"></span></p>
           </li>
           <li>
-            <p>
+            <p style="line-height: 1.3">
               3. Đơn vị sử dụng/quản lý thiết bị:
-              <span class="department"></span>
+              <span data-field="department"></span>
             </p>
           </li>
           <li>
-            <div style="font-size: 14pt; line-height: 1.3">
-              <p
-                style="white-space: normal"
-                class="fix-same-word"
-                contenteditable="true"
-              >
-                4. Tình trạng hiện tại của thiết bị: Thiết bị hoạt động bình
-                thường.
-              </p>
-            </div>
+            <p
+              class="item-text"
+              contenteditable="true"
+              data-persist="truoc.status"
+            >
+              4. Tình trạng hiện tại của thiết bị:
+            </p>
           </li>
           <li>
-            <div style="font-size: 14pt; line-height: 1.3">
-              <p
-                style="white-space: normal"
-                contenteditable="true"
-                class="fix-same-word"
-              >
-                5. Phương án thực hiện sửa chữa:
-              </p>
-            </div>
+            <p
+              class="item-text"
+              contenteditable="true"
+              data-persist="truoc.plan"
+            >
+              5. Phương án thực hiện sửa chữa:
+            </p>
           </li>
           <li>
-            <div style="font-size: 14pt; line-height: 1.3">
-              <p
-                style="white-space: normal"
-                contenteditable="true"
-                class="fix-same-word"
-              >
-                6. Kết luận: Sau khi sửa chữa thiết bị hoạt động bình thường.
-              </p>
-            </div>
+            <p
+              class="item-text"
+              contenteditable="true"
+              data-persist="truoc.conclusion"
+            >
+              6. Kết luận: Đồng ý phương án sửa chữa.
+            </p>
           </li>
         </ul>
-
-        <p style="display: none" class="text-title-14 title-main-page">
-          BẢNG YÊU CẦU VẬT TƯ
-        </p>
-        <p style="margin-bottom: 8px; display: none">
-          Đề nghị cung cấp các vật tư, linh kiện sau để phục vụ sửa chữa:
-        </p>
-        <div style="text-indent: 12px; display: none">
-          <table>
-            <tr>
-              <th>STT</th>
-              <th style="width: 140px">Đơn vị sử dụng</th>
-              <th style="width: 220px">Tên vật tư, linh kiện</th>
-              <th>Quy cách chủng loại, yêu cầu kỹ thuật</th>
-              <th>Số lượng</th>
-            </tr>
-            <tr style="text-align: center">
-              <td>1</td>
-              <td style="text-wrap: balance" class="department-short"></td>
-              <td class="break-after-print">
-                Hộp mực <span class="printerName"></span>
-              </td>
-              <td></td>
-              <td id="quantity">
-                <input id="input1" type="text" value="01" />
-              </td>
-              <!-- Số lượng có id để cập nhật -->
-            </tr>
-          </table>
-        </div>
       </div>
-      <div class="footer-page flex-beetwen">
-        <div style="justify-items: center" class="left-ft-page flex-column">
-          <p class="break-after-trung-tam">PHÒNG KẾ HOẠCH</p>
-          <p class="color-text-kh">Phan Nhật Mạnh</p>
+
+      <div class="footer-page flex-between">
+        <div class="left-ft-page flex-column">
+          <p contenteditable="true" data-persist="truoc.signPlan">
+            PHÒNG KẾ HOẠCH
+          </p>
+          <p data-field="planOffice" data-hidden-by="planOfficeHidden"></p>
         </div>
-        <div style="justify-items: center" class="left-ft-page flex-column">
-          <p class="break-after-trung-tam">PHÒNG BĐKT</p>
-          <p>Nguyễn Văn Toàn</p>
+        <div class="left-ft-page flex-column">
+          <p contenteditable="true" data-persist="truoc.signTech">PHÒNG BĐKT</p>
+          <p data-field="techBefore"></p>
         </div>
         <div class="right-ft-page flex-column">
-          <p>Đơn vị sử dụng</p>
-          <p class="representative"></p>
+          <p contenteditable="true" data-persist="truoc.signUnit">
+            Đơn vị sử dụng
+          </p>
+          <p data-field="representative"></p>
         </div>
       </div>
-    </div>
-    <div class="WordSection1">
+    </section>
+
+    <!-- ========== 3. BIÊN BẢN KIỂM TRA SAU SỬA CHỮA ========== -->
+    <section
+      class="page WordSection5"
+      data-doc="sau"
+      data-title="Biên bản kiểm tra sau sửa chữa"
+    >
       <div class="header-page">
         <div class="left-header-page flex-column">
           <p class="text-title-12">TRUNG TÂM THÔNG BÁO TIN TỨC HÀNG KHÔNG</p>
           <p
-            class="text-title-12 department"
+            class="text-title-12"
             style="border-bottom: 1px solid #000; margin-bottom: 10px"
+          >
+            Phòng Bảo đảm kỹ thuật
+          </p>
+        </div>
+
+        <div class="right-header-page flex-column">
+          <p class="text-title-12">CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM</p>
+          <p
+            class="text-title-13"
+            style="border-bottom: 1px solid #000; margin-bottom: 10px"
+          >
+            Độc lập – Tự do – Hạnh phúc
+          </p>
+        </div>
+      </div>
+
+      <div class="main-page">
+        <p class="text-title-14 title-main-page">
+          BIÊN BẢN KIỂM TRA KỸ THUẬT VẬT TƯ <br />
+          THIẾT BỊ SAU KHI SỬA CHỮA
+        </p>
+        <p
+          class="text-title-14"
+          style="text-align: left; margin: 20px 0"
+          contenteditable="true"
+          data-persist="sau.basis"
+        >
+          - Căn cứ biên bản nghiệm thu bàn giao sản phẩm.
+        </p>
+        <p style="letter-spacing: -0.5px">
+          Hôm nay, ngày
+          <span
+            data-field="sauDay"
+            data-format="day"
+            data-blank="&nbsp;&nbsp;&nbsp;"
+          ></span>
+          tháng
+          <span
+            data-field="sauMonth"
+            data-format="month"
+            data-blank="&nbsp;&nbsp;&nbsp;"
+          ></span>
+          năm <span data-field="year"></span> tại Trung tâm Thông báo tin tức
+          hàng không.
+        </p>
+        <p style="font-weight: bold; margin-top: 16px; margin-bottom: 4px">
+          Đại diện các bên gồm:
+        </p>
+
+        <p>1. Đại diện đơn vị sử dụng hoặc kho:</p>
+        <div class="flex-between">
+          <p style="margin: 2px 0">
+            - Ông (bà): <span data-field="representativeStaff"></span>
+          </p>
+          <p>
+            Chức vụ :
+            <span contenteditable="true" data-single-line>Nhân viên</span>
+          </p>
+        </div>
+        <p>2. Đại diện đơn vị chức năng:</p>
+        <div class="flex-between">
+          <p style="margin: 2px 0">
+            - Ông (bà): <span data-field="functional1"></span>
+          </p>
+          <p style="margin-right: 24px">
+            Chức vụ : <span data-field="functional1Position"></span>
+          </p>
+        </div>
+        <div class="flex-between">
+          <p style="margin: 2px 0">
+            - Ông (bà): <span data-field="functional2"></span>
+          </p>
+          <p style="margin-right: 24px">
+            Chức vụ : <span data-field="functional2Position"></span>
+          </p>
+        </div>
+        <p style="font-weight: bold; margin-top: 8px; margin-bottom: 4px">
+          Đại diện các bên đã tiến hành kiểm tra, đánh giá các nội dung sau:
+        </p>
+
+        <ul>
+          <li>
+            <p>1. Thông tin về tài sản:</p>
+          </li>
+          <li style="display: flex">
+            <div class="asset-info">
+              <div class="asset-row">
+                <div class="asset-label">- Tên vật tư thiết bị:</div>
+                <div class="asset-value" data-field="equipmentName"></div>
+              </div>
+              <div class="asset-row">
+                <div class="asset-label">- Số S/N (nếu có):</div>
+                <div class="asset-value" data-field="serialNumber"></div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <p>2. Địa điểm lắp đặt: <span data-field="department"></span></p>
+          </li>
+          <li>
+            <p>
+              3. Đơn vị sử dụng/quản lý thiết bị:
+              <span data-field="department"></span>
+            </p>
+          </li>
+          <li>
+            <p class="item-text" contenteditable="true" data-persist="sau.status">
+              4. Tình trạng hiện tại của thiết bị: Thiết bị hoạt động bình
+              thường.
+            </p>
+          </li>
+          <li>
+            <p class="item-text" contenteditable="true" data-persist="sau.plan">
+              5. Phương án thực hiện sửa chữa:
+            </p>
+          </li>
+          <li>
+            <p
+              class="item-text"
+              contenteditable="true"
+              data-persist="sau.conclusion"
+            >
+              6. Kết luận: Sau khi sửa chữa thiết bị hoạt động bình thường.
+            </p>
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-page flex-between">
+        <div class="left-ft-page flex-column">
+          <p contenteditable="true" data-persist="sau.signPlan">PHÒNG KẾ HOẠCH</p>
+          <p data-field="planOffice" data-hidden-by="planOfficeHidden"></p>
+        </div>
+        <div class="left-ft-page flex-column">
+          <p contenteditable="true" data-persist="sau.signTech">PHÒNG BĐKT</p>
+          <p data-field="techAfter"></p>
+        </div>
+        <div class="right-ft-page flex-column">
+          <p contenteditable="true" data-persist="sau.signUnit">
+            Đơn vị sử dụng
+          </p>
+          <p data-field="representative"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 4. PHIẾU BÁO HỎNG ===================== -->
+    <section
+      class="page WordSection1"
+      data-doc="baoHong"
+      data-title="Phiếu báo hỏng"
+    >
+      <div class="header-page">
+        <div class="left-header-page flex-column">
+          <p class="text-title-12">TRUNG TÂM THÔNG BÁO TIN TỨC HÀNG KHÔNG</p>
+          <p
+            class="text-title-12"
+            style="border-bottom: 1px solid #000; margin-bottom: 10px"
+            data-field="department"
           ></p>
         </div>
 
@@ -588,98 +550,111 @@
           </p>
         </div>
       </div>
+
       <div class="main-page">
         <p class="text-title-14 title-main-page">
           PHIẾU BÁO HỎNG TÀI SẢN, VẬT TƯ, TRANG THIẾT BỊ
         </p>
-        <p class="text-title-14" style="text-align: center">
+        <p
+          class="text-title-14"
+          style="text-align: center"
+          contenteditable="true"
+          data-persist="baoHong.recipient"
+        >
           Kính gửi: Phòng Kế hoạch
         </p>
 
         <div style="text-indent: 12px">
           <div
-            class="flex-beetwen"
+            class="flex-between"
             style="margin-top: 40px; margin-bottom: 4px"
           >
             <p class="text-title-14">
-              Tên tôi là: <span class="requester"></span>
+              Tên tôi là: <span data-field="requester"></span>
             </p>
-            <span>Chức vụ: Nhân viên</span>
+            <span>
+              Chức vụ:
+              <span contenteditable="true" data-single-line>Nhân viên</span>
+            </span>
           </div>
 
           <p style="margin-bottom: 4px !important">
-            Bộ phận công tác: <span class="department"></span>
+            Bộ phận công tác: <span data-field="department"></span>
           </p>
           <p>Xin báo cáo tài sản, trang thiết bị, vật tư bị hỏng như sau:</p>
           <div style="margin: 12px 0">
-            <table id="table3">
-              <tr>
-                <th>STT</th>
-                <th style="width: 200px">
-                  Tên tài sản, vật tư, trang thiết bị báo hỏng
-                </th>
-                <th>Số thẻ</th>
-                <th>ĐVT</th>
-                <th>Số lượng</th>
-                <th>Tình trạng hỏng</th>
-                <th>Ghi chú</th>
-              </tr>
-              <tr style="text-align: center">
-                <td>1</td>
-                <td
-                  contenteditable="true"
-                  style="word-break: break-word; white-space: nowrap"
-                ></td>
-                <td contenteditable="true" style="word-break: break-word"></td>
-                <td
-                  contenteditable="true"
-                  style="
-                    word-break: break-word;
-                    white-space: nowrap;
-                    width: auto;
-                  "
-                ></td>
-                <td
-                  contenteditable="true"
-                  style="word-break: break-word"
-                  id="quantity"
-                ></td>
-                <!-- Số lượng có id để cập nhật -->
-                <td contenteditable="true" style="word-break: break-word">
-                  Hỏng không sử dụng được
-                </td>
-                <td contenteditable="true" style="word-break: break-word"></td>
-              </tr>
+            <table id="table3" data-table="broken">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th style="width: 200px">
+                    Tên tài sản, vật tư, trang thiết bị báo hỏng
+                  </th>
+                  <th>Số thẻ</th>
+                  <th>ĐVT</th>
+                  <th>Số lượng</th>
+                  <th>Tình trạng hỏng</th>
+                  <th>Ghi chú</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="col-stt"></td>
+                  <td contenteditable="true" data-col="name"></td>
+                  <td contenteditable="true"></td>
+                  <td contenteditable="true"></td>
+                  <td contenteditable="true"></td>
+                  <td contenteditable="true">Hỏng không sử dụng được</td>
+                  <td contenteditable="true"></td>
+                </tr>
+              </tbody>
             </table>
-            <button onclick="addRow('table3')">Thêm dòng cho bảng 1</button>
-            <button onclick="deleteRow('table3')">Xoá dòng bảng 1</button>
             <p
-              contenteditable="true"
               style="
                 margin-top: 8px;
-                display: flex;
-                justify-content: end;
+                text-align: right;
+                text-indent: 0;
                 font-style: italic;
               "
             >
-              Hà Nội, ngày &nbsp;&nbsp;&nbsp; tháng &nbsp;&nbsp;&nbsp; năm 2026
+              Hà Nội, ngày
+              <span
+                data-field="baoHongDay"
+                data-format="day"
+                data-blank="&nbsp;&nbsp;&nbsp;"
+              ></span>
+              tháng
+              <span
+                data-field="baoHongMonth"
+                data-format="month"
+                data-blank="&nbsp;&nbsp;&nbsp;"
+              ></span>
+              năm <span data-field="year"></span>
             </p>
           </div>
         </div>
       </div>
 
       <div class="footer-page flex-around">
-        <div style="justify-items: center" class="left-ft-page flex-column">
-          <p class="department-short break-after-trung-tam"></p>
-          <p class="officer"></p>
+        <div class="left-ft-page flex-column">
+          <p data-field="shortDepartment" data-format="trung-tam"></p>
+          <p data-field="officer" data-hidden-by="hideOfficer"></p>
         </div>
         <div class="right-ft-page flex-column">
-          <p>Người đề nghị</p>
-          <p class="requester"></p>
+          <p contenteditable="true" data-persist="baoHong.signRequester">
+            Người đề nghị
+          </p>
+          <p data-field="requester"></p>
         </div>
       </div>
-    </div>
-    <div class="WordSection4">
+    </section>
+
+    <!-- ===================== 5. BIÊN BẢN THU HỒI ===================== -->
+    <section
+      class="page WordSection4"
+      data-doc="thuHoi"
+      data-title="Biên bản thu hồi"
+    >
       <div class="header-page">
         <div class="left-header-page flex-column">
           <p class="text-title-12">TRUNG TÂM THÔNG BÁO TIN TỨC HÀNG KHÔNG</p>
@@ -701,58 +676,85 @@
           </p>
         </div>
       </div>
+
       <div class="main-page">
         <p class="text-title-14 title-main-page">
           BIÊN BẢN THU HỒI TÀI SẢN, VẬT TƯ CŨ ĐÃ QUA SỬ DỤNG
         </p>
         <p class="text-title-14" style="margin-top: 30px">
           Căn cứ vào biên bản xác định tình trạng kỹ thuật vật tư, thiết bị ngày
-          &nbsp;&nbsp;&nbsp; tháng năm 2026
+          <span
+            data-field="canCuDay"
+            data-format="day"
+            data-blank="&nbsp;&nbsp;&nbsp;"
+          ></span>
+          tháng
+          <span
+            data-field="canCuMonth"
+            data-format="month"
+            data-blank="&nbsp;&nbsp;&nbsp;"
+          ></span>
+          năm <span data-field="year"></span>
         </p>
         <p class="text-title-14" style="margin-top: 6pt">
-          Hôm nay, ngày <span class="dayW4"></span> tháng
-          <span class="monthW4"></span> năm 2026 tại TTTBTTHK
+          Hôm nay, ngày
+          <span
+            data-field="daysW4"
+            data-format="day"
+            data-blank="&nbsp;&nbsp;&nbsp;"
+          ></span>
+          tháng
+          <span
+            data-field="monthW4"
+            data-format="month"
+            data-blank="&nbsp;&nbsp;&nbsp;"
+          ></span>
+          năm <span data-field="year"></span> tại TTTBTTHK
         </p>
         <p class="text-title-14" style="margin-top: 6pt">Chúng tôi gồm:</p>
         <p class="text-title-14" style="margin-top: 6pt">
-          1. Bên giao: <span class="department"></span>
+          1. Bên giao: <span data-field="department"></span>
         </p>
-        <div class="flex-beetwen ben-giao-requester">
+        <div class="flex-between">
           <p class="text-title-14" style="margin-top: 6pt">
-            Ông (Bà): <span class="requester"></span>
+            Ông (Bà): <span data-field="giver"></span>
           </p>
-          <span>Chức vụ: Nhân viên</span>
-        </div>
-        <div class="flex-beetwen ben-giao-ngocnga">
-          <p class="text-title-14" style="margin-top: 6pt">
-            Ông (Bà): Đặng Thị Ngọc Ngà
-          </p>
-          <span>Chức vụ: Nhân viên</span>
+          <span>
+            Chức vụ:
+            <span contenteditable="true" data-single-line>Nhân viên</span>
+          </span>
         </div>
         <p class="text-title-14" style="margin-top: 6pt">
-          2. Bên nhận: <span> Kho trung tâm</span>
+          2. Bên nhận:
+          <span contenteditable="true" data-single-line>Kho trung tâm</span>
         </p>
-        <div class="flex-beetwen">
+        <div class="flex-between">
           <p class="text-title-14" style="margin-top: 6pt">
-            Ông (Bà): Đào Thị Thanh
+            Ông (Bà): <span data-field="receiver"></span>
           </p>
-          <span>Chức vụ: Nhân viên</span>
+          <span>
+            Chức vụ:
+            <span contenteditable="true" data-single-line>Nhân viên</span>
+          </span>
         </div>
         <p class="text-title-14" style="margin-top: 6pt">
           3. Đại diện cơ quan chức năng (Tài chính):
         </p>
-        <div class="flex-beetwen">
+        <div class="flex-between">
           <p class="text-title-14" style="margin-top: 6pt">
-            Ông (Bà): Dương Thị Lan Thu
+            Ông (Bà): <span data-field="accountant"></span>
           </p>
-          <span>Chức vụ: Nhân viên</span>
+          <span>
+            Chức vụ:
+            <span contenteditable="true" data-single-line>Nhân viên</span>
+          </span>
         </div>
         <p class="text-title-14" style="margin-top: 6pt">
           Cùng nhau tiến hành thu hồi vật tư, tài sản đã qua sử dụng:
         </p>
 
-        <div class="table-thu-hoi" style="margin-top: 6pt">
-          <table id="table4">
+        <div style="margin-top: 6pt">
+          <table id="table4" data-table="recovered">
             <thead>
               <tr>
                 <th>STT</th>
@@ -769,37 +771,24 @@
             </thead>
             <tbody>
               <tr>
-                <td contenteditable="true">1</td>
-                <td
-                  contenteditable="true"
-                  style="word-break: break-word"
-                  class="text-left"
-                ></td>
-                <td contenteditable="true" style="word-break: break-word"></td>
-                <td
-                  contenteditable="true"
-                  style="word-break: break-word; white-space: nowrap"
-                ></td>
-                <td contenteditable="true" style="word-break: break-word">
-                  <input type="text" id="input2" />
-                </td>
-                <td contenteditable="true" style="word-break: break-word"></td>
-                <td contenteditable="true" style="word-break: break-word"></td>
-                <td contenteditable="true" style="word-break: break-word"></td>
-                <td
-                  contenteditable="true"
-                  style="word-break: break-word"
-                  class="text-left"
-                >
-                  Hỏng, không sử dụng được
-                </td>
-                <td contenteditable="true" style="word-break: break-word"></td>
+                <td class="col-stt"></td>
+                <td contenteditable="true" data-col="name"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true" data-col="unit"></td>
+                <td contenteditable="true" data-col="qty"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true">Hỏng, không sử dụng được</td>
+                <td contenteditable="true"></td>
               </tr>
             </tbody>
           </table>
-          <button onclick="addRow('table4')">Thêm dòng cho bảng 1</button>
-          <button onclick="deleteRow('table4')">Xoá dòng bảng 1</button>
-          <p style="margin-top: 6pt">
+          <p
+            style="margin-top: 6pt"
+            contenteditable="true"
+            data-persist="thuHoi.copies"
+          >
             Biên bản này được lập thành 03 bản có nội dung như nhau, mỗi bộ phận
             giữ 01 bản: Phòng Tài chính, bên giao, bên nhận.
           </p>
@@ -807,36 +796,24 @@
       </div>
 
       <div class="footer-page flex-around">
-        <div
-          style="justify-items: center"
-          class="left-ft-page flex-column ben-giao-requester"
-        >
-          <p>BÊN GIAO</p>
-          <p class="requester"></p>
+        <div class="left-ft-page flex-column">
+          <p contenteditable="true" data-persist="thuHoi.signGiver">BÊN GIAO</p>
+          <p data-field="giver"></p>
         </div>
-        <div
-          style="justify-items: center"
-          class="left-ft-page flex-column ben-giao-ngocnga"
-        >
-          <p>BÊN GIAO</p>
-          <p>Đặng Thị Ngọc Ngà</p>
-        </div>
-        <div style="justify-items: center" class="left-ft-page flex-column">
-          <p>KẾ TOÁN TÀI SẢN</p>
-          <p>Dương Thị Lan Thu</p>
+        <div class="left-ft-page flex-column">
+          <p contenteditable="true" data-persist="thuHoi.signAccountant">
+            KẾ TOÁN TÀI SẢN
+          </p>
+          <p data-field="accountant"></p>
         </div>
         <div class="right-ft-page flex-column">
-          <p>BÊN NHẬN</p>
-          <p>Đào Thị Thanh</p>
+          <p contenteditable="true" data-persist="thuHoi.signReceiver">
+            BÊN NHẬN
+          </p>
+          <p data-field="receiver"></p>
         </div>
       </div>
-    </div>
-
-    <!-- làm mất chữ Nguyễn Thị Thu -->
-
-    <!-- thêm dòng cho bảng -->
-
-    <!-- Chỉnh phần ký của biên bản thu hồi -->
+    </section>
 
     <script src="./A4.js"></script>
   </body>

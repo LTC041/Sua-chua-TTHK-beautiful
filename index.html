@@ -3,14 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sua chua TTHK</title>
+    <title>Quản lý sửa chữa TTHK</title>
     <link rel="stylesheet" href="./index.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   </head>
   <body>
     <div class="header">
       <h2>Quản lý sửa chữa</h2>
-      <input type="file" id="fileInput" accept=".xlsx, .xls" />
+      <div class="toolbar">
+        <input type="file" id="fileInput" accept=".xlsx, .xls" />
+        <button type="button" id="btnHeaderHistory" class="btn-secondary">
+          Lịch sử đã in
+        </button>
+      </div>
     </div>
 
     <div class="table-wrapper">
@@ -33,43 +38,57 @@
     </div>
 
     <div id="modal" class="modal">
-      <h3>Sửa trước khi in</h3>
-      <iframe
-        id="modalIframe"
-        src=""
-        style="width: 100%; height: 85%; border: none"
-      ></iframe>
-      <div
-        style="
-          display: flex;
-          justify-content: end;
-          gap: 20px;
-          margin-right: 50px;
-        "
-      >
-        <button onclick="openHistoryModal()">Lịch sử</button>
-        <button onclick="printIframe()">In hồ sơ</button>
-        <button onclick="closeModal()">Đóng</button>
+      <h3 id="modalTitle">Soạn hồ sơ</h3>
+      <iframe id="modalIframe" src="" title="Hồ sơ A4"></iframe>
+      <div class="modal-actions">
+        <button type="button" id="btnHistory" class="btn-secondary">
+          Lịch sử
+        </button>
+        <button
+          type="button"
+          id="btnExportWord"
+          class="btn-secondary"
+          title="Tải file Word (.docx) của các văn bản đang chọn in"
+        >
+          Xuất Word
+        </button>
+        <button type="button" id="btnPrint">In hồ sơ</button>
+        <button type="button" id="btnCloseModal" class="btn-secondary">
+          Đóng
+        </button>
       </div>
     </div>
+
     <div id="historyModal" class="modal">
-      <h3>Lịch sử hồ sơ đã in</h3>
-      <div
-        style="display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap"
-      >
+      <h3>
+        Lịch sử hồ sơ đã in
+        <span id="historySummary" class="muted"></span>
+      </h3>
+      <div class="toolbar history-toolbar">
         <input
           id="historySearch"
           type="text"
-          placeholder="Tìm theo phòng ban, người đề nghị..."
-          style="flex: 1; min-width: 260px; padding: 8px"
-          oninput="renderHistoryList()"
+          placeholder="Tìm theo phòng ban, người đề nghị, cán bộ..."
         />
-        <button onclick="exportHistoryJson()">Xuất JSON</button>
-        <button onclick="clearHistory()">Xoá toàn bộ</button>
-        <button onclick="closeHistoryModal()">Đóng</button>
+        <button type="button" id="btnExportHistory" class="btn-secondary">
+          Xuất sao lưu
+        </button>
+        <button type="button" id="btnImportHistory" class="btn-secondary">
+          Nhập sao lưu
+        </button>
+        <input id="historyImportInput" type="file" accept=".json" hidden />
+        <button type="button" id="btnClearHistory" class="btn-danger">
+          Xoá toàn bộ
+        </button>
+        <button type="button" id="btnCloseHistory" class="btn-secondary">
+          Đóng
+        </button>
       </div>
-      <div id="historyList" style="max-height: 70vh; overflow: auto"></div>
+      <div id="historyList"></div>
     </div>
+
+    <script src="./history-store.js"></script>
+    <script src="./docx-export.js"></script>
     <script src="./index.js"></script>
   </body>
 </html>
