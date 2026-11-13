@@ -17,6 +17,9 @@ SOẠN HỒ SƠ (bảng điều khiển bên trái trang A4)
   Ngày < 10 và tháng 1, 2 tự thêm số 0 (theo Nghị định 30/2020).
 - Người ký cố định (Phòng KH, Phòng BĐKT, đại diện chức năng, kho, kế toán...):
   sửa cho hồ sơ này, hoặc bấm "Lưu làm mặc định" để dùng cho các hồ sơ sau.
+- BB kiểm tra trước sửa chữa: Phòng BĐKT ký là Nguyễn Văn Toàn. Khi đơn vị là Phòng BĐKT,
+  cột "Đơn vị sử dụng" tự đổi sang Nguyễn Đức Dũng (ô "Đơn vị sử dụng – BB trước sửa chữa,
+  khi đơn vị là Phòng BĐKT"; để trống thì dùng tên trong Excel). BB sau sửa chữa không đổi.
 - Quy tắc tự động (mỗi dòng một tên):
   + Lãnh đạo đơn vị luôn ẩn tên khi in.
   + Người đề nghị không cần cột ký đơn vị trên tờ trình.

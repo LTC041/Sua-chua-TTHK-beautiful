@@ -35,6 +35,8 @@ const FACTORY_DEFAULTS = {
   planOffice: "Phan Nhật Mạnh",
   planOfficeHidden: true,
   techBefore: "Nguyễn Văn Toàn",
+  // Đơn vị là Phòng BĐKT: người ký cột "Đơn vị sử dụng" ở BB trước sửa chữa (thay tên trong Excel)
+  techUnitBefore: "Nguyễn Đức Dũng",
   techAfter: "Nguyễn Văn Toàn",
   functional1: "Lê Tuấn Cường",
   functional1Position: "NVKH",
@@ -80,7 +82,17 @@ const DATE_ROWS = [
 const LINKED_COLUMNS = ["name", "unit", "qty"];
 
 // Bấm chỗ hiển thị trên trang thì nhảy tới ô nhập tương ứng
-const FIELD_INPUT_ALIAS = { giver: "giverOverride" };
+const FIELD_INPUT_ALIAS = {
+  giver: () => "giverOverride",
+  unitSignBefore: () =>
+    usesTechUnitSigner() ? "techUnitBefore" : "representative",
+};
+
+// Nhận ra đơn vị là Phòng Bảo đảm kỹ thuật (viết đủ, viết tắt BĐKT, có/không dấu)
+const TECH_DEPARTMENT_PATTERN = /\b(bao dam|dam bao) ky thuat\b|\bbdkt\b/;
+
+// Tăng khi cần sửa giá trị cũ đã lưu trong trình duyệt (xem migrateSettings)
+const SETTINGS_VERSION = 2;
 
 const PANEL_GROUPS = [
   {
@@ -159,6 +171,12 @@ const PANEL_GROUPS = [
         label: "Phòng BĐKT – BB trước sửa chữa",
         people: true,
         required: true,
+      },
+      {
+        key: "techUnitBefore",
+        label: "Đơn vị sử dụng – BB trước sửa chữa, khi đơn vị là Phòng BĐKT",
+        people: true,
+        placeholder: "Để trống = dùng tên trong Excel",
       },
       {
         key: "techAfter",
@@ -244,14 +262,16 @@ const PANEL_GROUPS = [
 ];
 
 const PANEL_FIELDS = PANEL_GROUPS.flatMap((group) => group.fields || []);
-const REQUIRED_FIELDS = new Set(
-  PANEL_FIELDS.filter((f) => f.required).map((f) => f.key),
-);
+const REQUIRED_FIELDS = new Set([
+  ...PANEL_FIELDS.filter((f) => f.required).map((f) => f.key),
+  "unitSignBefore",
+]);
 const PEOPLE_FIELDS = PANEL_FIELDS.filter((f) => f.people).map((f) => f.key);
 
 const FIELD_LABELS = (() => {
   const labels = {
     giver: "Bên giao",
+    unitSignBefore: "Đơn vị sử dụng ký – BB trước sửa chữa",
     year: "Năm",
     docNumber: "Số",
     docSymbol: "Ký hiệu",
@@ -313,6 +333,13 @@ const splitLines = (text) =>
     .split(/[\n,;]/)
     .map((item) => item.trim())
     .filter(Boolean);
+
+// Bỏ dấu tiếng Việt để so khớp: "Bảo đảm kỹ thuật" -> "bao dam ky thuat"
+const plainText = (value) =>
+  normalizeName(value)
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/đ/g, "d");
 
 function nameInList(name, listText) {
   if (!normalizeName(name)) return false;
@@ -403,9 +430,24 @@ const renderedText = new WeakMap();
 
 const isEmbedded = window.parent && window.parent !== window;
 
+// Sửa giá trị đã "Lưu làm mặc định" ở bản cũ mà nay không còn đúng
+function migrateSettings(saved) {
+  const version = Number(saved.version) || 1;
+  const defaults = { ...saved.defaults };
+
+  // v2: Phòng BĐKT ở BB trước sửa chữa đổi từ Nguyễn Đức Dũng sang Nguyễn Văn Toàn
+  // (Nguyễn Đức Dũng chuyển sang ký cột Đơn vị sử dụng khi đơn vị là Phòng BĐKT)
+  if (version < 2 && isSameName(defaults.techBefore, "Nguyễn Đức Dũng")) {
+    delete defaults.techBefore;
+  }
+
+  return { ...saved, defaults };
+}
+
 function loadSettings() {
-  const saved = loadJson(STORAGE_KEYS.settings, {}) || {};
+  const saved = migrateSettings(loadJson(STORAGE_KEYS.settings, {}) || {});
   return {
+    version: SETTINGS_VERSION,
     defaults: { ...FACTORY_DEFAULTS, ...saved.defaults },
     rules: { ...FACTORY_RULES, ...saved.rules },
     options: { ...FACTORY_OPTIONS, ...saved.options },
@@ -454,11 +496,25 @@ function getAutoGiver() {
     : state.requester;
 }
 
+const isTechDepartment = (department) =>
+  TECH_DEPARTMENT_PATTERN.test(plainText(department));
+
+// Đơn vị là Phòng BĐKT thì cột "Đơn vị sử dụng" ở BB trước sửa chữa dùng người ký riêng
+function usesTechUnitSigner() {
+  return (
+    isTechDepartment(state.department) &&
+    Boolean(toText(state.techUnitBefore).trim())
+  );
+}
+
 // Giá trị cuối cùng để hiển thị (đã tính các trường tự động)
 function buildView() {
   const view = {
     ...state,
     giver: toText(state.giverOverride).trim() || getAutoGiver(),
+    unitSignBefore: usesTechUnitSigner()
+      ? state.techUnitBefore
+      : state.representative,
   };
 
   Object.entries(AUTO_TOGGLES).forEach(([key, compute]) => {
@@ -587,13 +643,19 @@ function collectIssues(view) {
   const isPrinted = (element) =>
     !element.closest(".is-excluded, .is-hidden, .is-name-hidden");
 
+  const missingInputs = new Set();
   REQUIRED_FIELDS.forEach((key) => {
     if (toText(view[key]).trim()) return;
 
     const used = Array.from(
       document.querySelectorAll(`.page [data-field="${key}"]`),
     ).some(isPrinted);
-    if (used) issues.push({ label: `Chưa nhập: ${FIELD_LABELS[key]}`, key });
+    // Nhiều chỗ trên trang cùng lấy từ một ô nhập thì chỉ nhắc một lần
+    const inputKey = FIELD_INPUT_ALIAS[key]?.() || key;
+    if (!used || missingInputs.has(inputKey)) return;
+
+    missingInputs.add(inputKey);
+    issues.push({ label: `Chưa nhập: ${FIELD_LABELS[key]}`, key });
   });
 
   getTables().forEach((table) => {
@@ -1173,6 +1235,7 @@ function buildField(field) {
           type: "text",
           autocomplete: "off",
           list: field.people ? "peopleList" : null,
+          placeholder: field.placeholder,
           "data-model": field.key,
         });
 
@@ -1443,7 +1506,8 @@ function renderPanelState(view) {
     toText(state.department) || "Chưa chọn đơn vị";
 }
 
-function focusPanelField(key) {
+function focusPanelField(fieldKey) {
+  const key = FIELD_INPUT_ALIAS[fieldKey]?.() || fieldKey;
   const input = panel.querySelector(`[data-model="${key}"]`);
   if (!input) return;
 
@@ -1663,8 +1727,7 @@ function handleClick(event) {
 
   const fieldElement = event.target.closest(".page [data-field]");
   if (fieldElement) {
-    const key = fieldElement.dataset.field;
-    focusPanelField(FIELD_INPUT_ALIAS[key] || key);
+    focusPanelField(fieldElement.dataset.field);
   }
 }
 
