@@ -3,6 +3,7 @@ QUẢN LÝ SỬA CHỮA TTHK
 Cấu trúc file:
 - index.html / index.css / index.js: màn hình import Excel, danh sách hồ sơ, cửa sổ soạn & in, lịch sử.
 - history-store.js: kho lưu lịch sử hồ sơ đã in (IndexedDB + nén gzip).
+- history-legacy.css: định dạng cũ, chỉ để xem / in lại hồ sơ lưu trước 03/11/2026.
 - docx-export.js: xuất hồ sơ ra file Word (.docx), không cần thư viện ngoài.
 - A4.html: nội dung 5 biểu mẫu (tờ trình, BB kiểm tra trước/sau sửa chữa, phiếu báo hỏng, BB thu hồi).
 - A4.css: định dạng biểu mẫu, giao diện soạn thảo (chỉ trên màn hình) và định dạng khi in.
@@ -43,8 +44,14 @@ XUẤT WORD
 - Trong cửa sổ Lịch sử, nút "Word" xuất lại file Word của hồ sơ đã in trước đó.
 
 LỊCH SỬ HỒ SƠ ĐÃ IN
-- Lưu trong IndexedDB của trình duyệt, mỗi hồ sơ được nén còn khoảng 5KB.
+- Lưu trong IndexedDB của trình duyệt, mỗi hồ sơ được nén còn khoảng 10KB.
+  Bản lưu chứa luôn định dạng (CSS) lúc in, nên sau này có sửa A4.css thì hồ sơ cũ
+  vẫn xem / in lại đúng như bản đã in.
 - In lại hồ sơ giống hệt bản gần nhất thì chỉ tăng "số lần in".
+- "Xem": mở hồ sơ ở tab mới, có nút "In hồ sơ này" ở góc dưới (nút không in ra giấy).
+- "In lại": mở thẳng hộp thoại in, không cần mở tab mới.
+- Hồ sơ lưu trước bản nâng cấp 03/11/2026 dùng cấu trúc cũ: tự dùng định dạng cũ trong
+  history-legacy.css (không sửa file này).
 - "Xuất sao lưu" / "Nhập sao lưu" để backup hoặc chuyển sang máy khác.
 
 Lưu ý:

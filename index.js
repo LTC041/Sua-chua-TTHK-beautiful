@@ -255,13 +255,39 @@ function copyFormValues(sourceRoot, cloneRoot) {
   });
 }
 
+function readCssText(sheet) {
+  try {
+    return [...sheet.cssRules].map((rule) => rule.cssText).join("\n");
+  } catch {
+    return null; // trình duyệt không cho đọc (vd. mở bằng file://)
+  }
+}
+
+// Nhúng thẳng CSS vào bản chụp: sau này A4.css có sửa thì hồ sơ đã lưu
+// vẫn hiện và in lại đúng như lúc in. Không đọc được CSS thì giữ thẻ <link>.
+function inlineStylesheets(doc, clone) {
+  const sourceLinks = doc.querySelectorAll('link[rel~="stylesheet"]');
+  const clonedLinks = clone.querySelectorAll('link[rel~="stylesheet"]');
+
+  sourceLinks.forEach((link, index) => {
+    const css = link.sheet ? readCssText(link.sheet) : null;
+    if (css === null || !clonedLinks[index]) return;
+
+    const style = doc.createElement("style");
+    style.dataset.source = link.getAttribute("href") || "";
+    style.textContent = css;
+    clonedLinks[index].replaceWith(style);
+  });
+}
+
 // Tạo bản HTML tĩnh của hồ sơ để lưu lịch sử:
 // - bỏ <script> để khi xem lại không bị A4.js điền đè dữ liệu của hồ sơ đang chọn
 // - bỏ bảng điều khiển, nút thêm/xoá dòng và các trang không in (giảm dung lượng)
-// - thêm <base> để bản xem lại vẫn tìm được A4.css
+// - nhúng CSS và thêm <base> để bản lưu tự hiển thị đúng, không phụ thuộc A4.css sau này
 function createSnapshotHTML(doc) {
   const clone = doc.documentElement.cloneNode(true);
   copyFormValues(doc, clone);
+  inlineStylesheets(doc, clone);
 
   clone
     .querySelectorAll("script, button, [data-editor-ui], .is-excluded")
@@ -396,14 +422,18 @@ async function exportWord() {
 }
 
 async function exportHistoryWord(id, button) {
-  const item = historyCache.find((entry) => entry.id === id);
+  const item = findHistoryItem(id);
   await withBusyButton(button, "Đang xuất...", async () => {
-    const html = await HistoryStore.getHtml(id).catch(() => null);
+    const html = await loadHistoryHtml(id);
     if (!html) {
       alert("Không tìm thấy hồ sơ.");
       return;
     }
-    await downloadWord(html, item?.meta, item ? new Date(item.createdAt) : new Date());
+    await downloadWord(
+      prepareHistoryHtml(html),
+      item?.meta,
+      item ? new Date(item.createdAt) : new Date(),
+    );
   });
 }
 
@@ -514,38 +544,193 @@ function renderHistoryList() {
   `;
 }
 
-async function openHistoryWindow(id, { print = false } = {}) {
+/* ---------- Xem / in lại hồ sơ đã lưu ---------- */
+
+// CSS của biểu mẫu A4 trước bản nâng cấp 03/11/2026, dành cho hồ sơ lưu từ trước đó
+const LEGACY_CSS_FILE = "history-legacy.css";
+const PRINT_FRAME_TIMEOUT_MS = 15000;
+
+// Thanh "In hồ sơ này" trong cửa sổ xem lại (không in ra giấy)
+const HISTORY_VIEW_CSS = `
+  .history-view-bar {
+    position: fixed; right: 16px; bottom: 16px; z-index: 50;
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 8px 8px 14px; border-radius: 10px;
+    color: #fff; background: #1e3a8a; box-shadow: 0 6px 16px rgba(15, 23, 42, 0.3);
+    font: 13px/1.4 "Segoe UI", system-ui, Arial, sans-serif;
+  }
+  .history-view-bar button {
+    margin: 0; padding: 7px 16px; border: 0; border-radius: 6px;
+    color: #1e3a8a; background: #fff; cursor: pointer;
+    font: 600 13px/1.2 "Segoe UI", system-ui, Arial, sans-serif;
+  }
+  .history-view-bar button:hover { background: #dbeafe; }
+  @media print { .history-view-bar { display: none !important; } }
+`;
+
+function findHistoryItem(id) {
+  return historyCache.find((entry) => entry.id === id);
+}
+
+function buildHistoryTitle(item) {
+  return ["Hồ sơ", item?.meta?.department, formatDate(item?.createdAt)]
+    .filter(Boolean)
+    .join(" – ");
+}
+
+async function loadHistoryHtml(id) {
+  try {
+    return await HistoryStore.getHtml(id);
+  } catch (error) {
+    console.error("Không đọc được hồ sơ trong lịch sử", error);
+    return null;
+  }
+}
+
+// Hồ sơ lưu trước bản nâng cấp: các trang là div.WordSection…, chưa có lớp .page
+function isLegacySnapshot(doc) {
+  return !doc.querySelector(".page") && Boolean(doc.querySelector('[class*="WordSection"]'));
+}
+
+// Chuẩn bị bản lưu trước khi xem / in lại / xuất Word:
+// - đường dẫn tương đối (A4.css...) luôn tính theo thư mục dự án đang mở,
+//   kể cả khi bản lưu được tạo lúc mở bằng cổng / địa chỉ khác
+// - hồ sơ cũ dùng lại CSS cũ: CSS hiện tại không khớp cấu trúc cũ nên vỡ bố cục, lộ tên cần ẩn
+function prepareHistoryHtml(html, { title = "", toolbar = "" } = {}) {
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const head = doc.head;
+
+  head.querySelectorAll("base").forEach((element) => element.remove());
+  const base = doc.createElement("base");
+  base.href = new URL("A4.html", location.href).href;
+  head.prepend(base);
+
+  if (isLegacySnapshot(doc)) {
+    head.querySelectorAll('link[rel~="stylesheet"]').forEach((link) => link.remove());
+    const link = doc.createElement("link");
+    link.rel = "stylesheet";
+    link.href = new URL(LEGACY_CSS_FILE, location.href).href;
+    head.append(link);
+
+    // Bản cũ còn nút "Thêm dòng / Xoá dòng" và vùng sửa trực tiếp
+    doc.querySelectorAll("script, button").forEach((element) => element.remove());
+    doc
+      .querySelectorAll("[contenteditable]")
+      .forEach((element) => element.removeAttribute("contenteditable"));
+    // Đánh dấu từng trang để xuất Word nhận ra
+    doc
+      .querySelectorAll('body > [class*="WordSection"]')
+      .forEach((section) => section.classList.add("page"));
+  }
+
+  if (title) doc.title = title;
+
+  if (toolbar) {
+    const style = doc.createElement("style");
+    style.textContent = HISTORY_VIEW_CSS;
+    head.append(style);
+
+    const bar = doc.createElement("aside");
+    bar.className = "history-view-bar";
+    const label = doc.createElement("span");
+    label.textContent = toolbar;
+    const button = doc.createElement("button");
+    button.type = "button";
+    button.textContent = "In hồ sơ này";
+    button.setAttribute("onclick", "window.print()");
+    bar.append(label, button);
+    doc.body.append(bar);
+  }
+
+  return `<!DOCTYPE html>\n${doc.documentElement.outerHTML}`;
+}
+
+async function viewHistory(id) {
   // Mở cửa sổ trước khi chờ dữ liệu để trình duyệt không coi là popup tự bật
   const win = window.open("", "_blank");
   if (!win) {
-    alert("Trình duyệt đang chặn popup.");
+    alert("Trình duyệt đang chặn cửa sổ bật lên. Hãy cho phép popup cho trang này.");
     return;
   }
 
-  const html = await HistoryStore.getHtml(id).catch((error) => {
-    console.error(error);
-    return null;
-  });
-
+  const html = await loadHistoryHtml(id);
   if (!html) {
     win.close();
     alert("Không tìm thấy hồ sơ.");
     return;
   }
 
-  win.document.open();
-  win.document.write(html);
-  win.document.close();
+  const item = findHistoryItem(id);
+  const page = prepareHistoryHtml(html, {
+    title: buildHistoryTitle(item),
+    toolbar: item ? `Bản lưu lúc ${formatDate(item.createdAt)}` : "Bản lưu",
+  });
+  // Mở bằng địa chỉ blob thay cho document.write: tải lại tab vẫn ra đúng hồ sơ
+  win.location.replace(
+    URL.createObjectURL(new Blob([page], { type: "text/html;charset=utf-8" })),
+  );
+}
 
-  if (!print) return;
+// Dựng hồ sơ trong một iframe ẩn và chỉ trả về khi CSS, phông chữ đã tải xong
+// (trước đây lệnh in chạy lúc CSS chưa tải nên bản in mất hết định dạng)
+function loadPrintFrame(html) {
+  getElement("historyPrintFrame")?.remove();
 
-  const printWhenReady = () => {
-    win.focus();
-    win.print();
-  };
+  const iframe = document.createElement("iframe");
+  iframe.id = "historyPrintFrame";
+  iframe.title = "Bản in lại hồ sơ";
+  iframe.tabIndex = -1;
+  iframe.setAttribute("aria-hidden", "true");
+  Object.assign(iframe.style, {
+    position: "fixed",
+    right: "0",
+    bottom: "0",
+    width: "0",
+    height: "0",
+    border: "0",
+    visibility: "hidden",
+  });
 
-  if (win.document.readyState === "complete") printWhenReady();
-  else win.addEventListener("load", printWhenReady, { once: true });
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(
+      () => reject(new Error("Quá thời gian tải hồ sơ.")),
+      PRINT_FRAME_TIMEOUT_MS,
+    );
+
+    iframe.addEventListener(
+      "load",
+      async () => {
+        clearTimeout(timer);
+        await iframe.contentDocument?.fonts?.ready;
+        resolve(iframe);
+      },
+      { once: true },
+    );
+
+    iframe.srcdoc = html;
+    document.body.append(iframe);
+  });
+}
+
+async function reprintHistory(id, button) {
+  await withBusyButton(button, "Đang in...", async () => {
+    const html = await loadHistoryHtml(id);
+    if (!html) {
+      alert("Không tìm thấy hồ sơ.");
+      return;
+    }
+
+    try {
+      const frame = await loadPrintFrame(
+        prepareHistoryHtml(html, { title: buildHistoryTitle(findHistoryItem(id)) }),
+      );
+      frame.contentWindow.focus();
+      frame.contentWindow.print();
+    } catch (error) {
+      console.error("Lỗi in lại hồ sơ", error);
+      alert("Không in lại được hồ sơ: " + error.message);
+    }
+  });
 }
 
 async function deleteHistory(id) {
@@ -648,8 +833,8 @@ function bindEvents() {
     if (!button) return;
 
     const { action, id } = button.dataset;
-    if (action === "view") openHistoryWindow(id);
-    else if (action === "reprint") openHistoryWindow(id, { print: true });
+    if (action === "view") viewHistory(id);
+    else if (action === "reprint") reprintHistory(id, button);
     else if (action === "word") exportHistoryWord(id, button);
     else if (action === "delete") deleteHistory(id);
   });
