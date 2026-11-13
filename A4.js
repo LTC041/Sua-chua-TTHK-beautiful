@@ -34,7 +34,7 @@ const EXCEL_FIELDS = [
 const FACTORY_DEFAULTS = {
   planOffice: "Phan Nhật Mạnh",
   planOfficeHidden: true,
-  techBefore: "Nguyễn Đức Dũng",
+  techBefore: "Nguyễn Văn Toàn",
   techAfter: "Nguyễn Văn Toàn",
   functional1: "Lê Tuấn Cường",
   functional1Position: "NVKH",
@@ -63,7 +63,8 @@ const FACTORY_OPTIONS = {
 // Tuỳ chọn tự tính theo quy tắc, trừ khi người dùng tự bật/tắt cho hồ sơ đang soạn
 const AUTO_TOGGLES = {
   hideOfficer: (s) => nameInList(s.officer, s.hiddenOfficerNames),
-  showUnitColumn: (s) => !nameInList(s.requester, s.requestersWithoutUnitColumn),
+  showUnitColumn: (s) =>
+    !nameInList(s.requester, s.requestersWithoutUnitColumn),
 };
 
 const DATE_ROWS = [
@@ -90,7 +91,12 @@ const PANEL_GROUPS = [
     fields: [
       { key: "department", label: "Phòng ban", required: true },
       { key: "shortDepartment", label: "Tên đơn vị ở chỗ ký", required: true },
-      { key: "requester", label: "Người đề nghị", people: true, required: true },
+      {
+        key: "requester",
+        label: "Người đề nghị",
+        people: true,
+        required: true,
+      },
       {
         key: "officer",
         label: "Lãnh đạo đơn vị ký",
@@ -111,7 +117,9 @@ const PANEL_GROUPS = [
         required: true,
       },
     ],
-    actions: [{ action: "save-to-list", label: "Lưu vào danh sách", primary: true }],
+    actions: [
+      { action: "save-to-list", label: "Lưu vào danh sách", primary: true },
+    ],
   },
   {
     id: "equipment",
@@ -119,11 +127,21 @@ const PANEL_GROUPS = [
     open: true,
     hint: "Nhập một lần, tự hiện ở cả hai biên bản kiểm tra và phiếu báo hỏng.",
     fields: [
-      { key: "equipmentName", label: "Tên vật tư thiết bị", multiline: true, required: true },
+      {
+        key: "equipmentName",
+        label: "Tên vật tư thiết bị",
+        multiline: true,
+        required: true,
+      },
       { key: "serialNumber", label: "Số S/N (nếu có)" },
     ],
   },
-  { id: "dates", title: "Ngày tháng & số văn bản", open: true, build: buildDatesGroup },
+  {
+    id: "dates",
+    title: "Ngày tháng & số văn bản",
+    open: true,
+    build: buildDatesGroup,
+  },
   {
     id: "signers",
     title: "Người ký cố định",
@@ -136,8 +154,18 @@ const PANEL_GROUPS = [
         required: true,
         toggle: { key: "planOfficeHidden", label: "Ẩn tên khi in" },
       },
-      { key: "techBefore", label: "Phòng BĐKT – BB trước sửa chữa", people: true, required: true },
-      { key: "techAfter", label: "Phòng BĐKT – BB sau sửa chữa", people: true, required: true },
+      {
+        key: "techBefore",
+        label: "Phòng BĐKT – BB trước sửa chữa",
+        people: true,
+        required: true,
+      },
+      {
+        key: "techAfter",
+        label: "Phòng BĐKT – BB sau sửa chữa",
+        people: true,
+        required: true,
+      },
       {
         key: "functional1",
         label: "Đại diện đơn vị chức năng 1",
@@ -152,10 +180,28 @@ const PANEL_GROUPS = [
         required: true,
         position: "functional2Position",
       },
-      { key: "receiver", label: "Bên nhận – Kho trung tâm", people: true, required: true },
-      { key: "accountant", label: "Kế toán tài sản", people: true, required: true },
-      { key: "substituteGiver", label: "Bên giao thay khi người đề nghị là kế toán", people: true },
-      { key: "giverOverride", label: "Bên giao BB thu hồi (để trống = tự động)", people: true },
+      {
+        key: "receiver",
+        label: "Bên nhận – Kho trung tâm",
+        people: true,
+        required: true,
+      },
+      {
+        key: "accountant",
+        label: "Kế toán tài sản",
+        people: true,
+        required: true,
+      },
+      {
+        key: "substituteGiver",
+        label: "Bên giao thay khi người đề nghị là kế toán",
+        people: true,
+      },
+      {
+        key: "giverOverride",
+        label: "Bên giao BB thu hồi (để trống = tự động)",
+        people: true,
+      },
     ],
     actions: [
       { action: "save-defaults", label: "Lưu làm mặc định", primary: true },
@@ -170,27 +216,37 @@ const PANEL_GROUPS = [
       { key: "linkBroken", label: "Phiếu báo hỏng: tự điền tên thiết bị" },
       { key: "linkRecovered", label: "BB thu hồi: tự điền vật tư từ tờ trình" },
     ],
-    actions: [{ action: "relink-recovered", label: "Tự điền lại bảng thu hồi" }],
+    actions: [
+      { action: "relink-recovered", label: "Tự điền lại bảng thu hồi" },
+    ],
   },
   {
     id: "rules",
     title: "Quy tắc tự động",
     hint: "Mỗi dòng một tên. Áp dụng khi mở hồ sơ; vẫn bật/tắt tay được cho từng hồ sơ.",
     fields: [
-      { key: "hiddenOfficerNames", label: "Lãnh đạo đơn vị luôn ẩn tên khi in", textarea: true },
+      {
+        key: "hiddenOfficerNames",
+        label: "Lãnh đạo đơn vị luôn ẩn tên khi in",
+        textarea: true,
+      },
       {
         key: "requestersWithoutUnitColumn",
         label: "Người đề nghị không cần cột ký đơn vị trên tờ trình",
         textarea: true,
       },
     ],
-    actions: [{ action: "save-defaults", label: "Lưu làm mặc định", primary: true }],
+    actions: [
+      { action: "save-defaults", label: "Lưu làm mặc định", primary: true },
+    ],
   },
   { id: "pages", title: "Văn bản cần in", open: true, build: buildPagesGroup },
 ];
 
 const PANEL_FIELDS = PANEL_GROUPS.flatMap((group) => group.fields || []);
-const REQUIRED_FIELDS = new Set(PANEL_FIELDS.filter((f) => f.required).map((f) => f.key));
+const REQUIRED_FIELDS = new Set(
+  PANEL_FIELDS.filter((f) => f.required).map((f) => f.key),
+);
 const PEOPLE_FIELDS = PANEL_FIELDS.filter((f) => f.people).map((f) => f.key);
 
 const FIELD_LABELS = (() => {
@@ -473,7 +529,8 @@ function renderDocument(view) {
 function renderField(element, rawValue) {
   const { format, blank } = element.dataset;
   let text = toText(rawValue).trim();
-  if (format === "day" || format === "month") text = formatDatePart(text, format);
+  if (format === "day" || format === "month")
+    text = formatDatePart(text, format);
 
   element.classList.toggle("is-empty", !text && blank === undefined);
 
@@ -567,7 +624,9 @@ function renderIssues(view) {
 
   if (!currentIssues.length) {
     box.className = "panel-issues is-ok";
-    box.replaceChildren(h("strong", { text: "✓ Đã đủ thông tin, sẵn sàng in" }));
+    box.replaceChildren(
+      h("strong", { text: "✓ Đã đủ thông tin, sẵn sàng in" }),
+    );
     return;
   }
 
@@ -776,7 +835,8 @@ function syncLinkedTables(view) {
     '[data-col="name"]',
   );
   if (brokenCell) {
-    if (view.linkBroken) linkCell(brokenCell, toText(view.equipmentName).trim());
+    if (view.linkBroken)
+      linkCell(brokenCell, toText(view.equipmentName).trim());
     else unmarkLinked(brokenCell);
   }
 }
@@ -839,7 +899,16 @@ function relinkRecovered() {
    MẪU CÂU CHỮ (data-persist)
    ========================= */
 
-const TEMPLATE_TAGS = new Set(["p", "div", "br", "b", "strong", "i", "em", "u"]);
+const TEMPLATE_TAGS = new Set([
+  "p",
+  "div",
+  "br",
+  "b",
+  "strong",
+  "i",
+  "em",
+  "u",
+]);
 const FIELD_ATTRIBUTES = ["data-field", "data-format", "data-blank"];
 
 // Chỉ giữ chữ, xuống dòng, định dạng cơ bản và chỗ tự điền (để trống)
@@ -871,7 +940,9 @@ function cleanTemplateNode(parent) {
     cleanTemplateNode(node);
 
     if (TEMPLATE_TAGS.has(tag)) {
-      Array.from(node.attributes).forEach(({ name }) => node.removeAttribute(name));
+      Array.from(node.attributes).forEach(({ name }) =>
+        node.removeAttribute(name),
+      );
     } else {
       node.replaceWith(...node.childNodes);
     }
@@ -968,7 +1039,10 @@ function saveTemplate() {
   settings.templates[key] = sanitizeTemplate(activeTemplateBlock.innerHTML);
   saveSettings();
   updateTemplateBar();
-  showToast("Đã lưu làm mẫu. Các hồ sơ mở sau sẽ dùng nội dung này.", "success");
+  showToast(
+    "Đã lưu làm mẫu. Các hồ sơ mở sau sẽ dùng nội dung này.",
+    "success",
+  );
 }
 
 function resetTemplate() {
@@ -1025,7 +1099,14 @@ function buildPanel() {
     h(
       "div",
       { class: "shortcut-help" },
-      h("div", {}, h("kbd", { text: "Ctrl" }), " + ", h("kbd", { text: "P" }), " In hồ sơ"),
+      h(
+        "div",
+        {},
+        h("kbd", { text: "Ctrl" }),
+        " + ",
+        h("kbd", { text: "P" }),
+        " In hồ sơ",
+      ),
       h(
         "div",
         {},
@@ -1068,7 +1149,11 @@ function buildGroup(group) {
       (group.toggles || []).map(buildToggle),
       group.build ? group.build() : null,
       group.actions
-        ? h("div", { class: "group-actions" }, group.actions.map(buildActionButton))
+        ? h(
+            "div",
+            { class: "group-actions" },
+            group.actions.map(buildActionButton),
+          )
         : null,
     ),
   );
@@ -1230,7 +1315,10 @@ function buildDatesGroup() {
     h(
       "div",
       { class: "group-actions" },
-      buildActionButton({ action: "date-all-today", label: "Hôm nay cho tất cả" }),
+      buildActionButton({
+        action: "date-all-today",
+        label: "Hôm nay cho tất cả",
+      }),
       buildActionButton({ action: "date-clear", label: "Để trống tất cả" }),
     ),
   ];
@@ -1348,7 +1436,8 @@ function renderPanelState(view) {
   });
 
   const giverInput = panel.querySelector('[data-model="giverOverride"]');
-  if (giverInput) giverInput.placeholder = `Tự động: ${getAutoGiver() || "(trống)"}`;
+  if (giverInput)
+    giverInput.placeholder = `Tự động: ${getAutoGiver() || "(trống)"}`;
 
   panel.querySelector("[data-panel-subtitle]").textContent =
     toText(state.department) || "Chưa chọn đơn vị";
@@ -1379,7 +1468,9 @@ function setPanelCollapsed(collapsed) {
 function applyUiPrefs() {
   const prefs = loadJson(STORAGE_KEYS.ui, {}) || {};
   const collapsed =
-    typeof prefs.collapsed === "boolean" ? prefs.collapsed : window.innerWidth < 1100;
+    typeof prefs.collapsed === "boolean"
+      ? prefs.collapsed
+      : window.innerWidth < 1100;
   document.body.classList.toggle("panel-collapsed", collapsed);
 
   if (Array.isArray(prefs.openGroups)) {
@@ -1519,7 +1610,8 @@ const ACTIONS = {
   "date-all-today": () => fillToday(DATE_ROWS),
   "date-clear": clearDates,
   "goto-page": (button) => scrollToDoc(button.dataset.doc),
-  "focus-issue": (button) => focusIssue(currentIssues[Number(button.dataset.index)]),
+  "focus-issue": (button) =>
+    focusIssue(currentIssues[Number(button.dataset.index)]),
   "row-add": (button) => {
     const row = button.closest("tr");
     addRowAfter(row.closest("table"), row);
@@ -1605,7 +1697,9 @@ function pastePlainText(event) {
   if (!editable) return;
 
   event.preventDefault();
-  const text = (event.clipboardData || window.clipboardData).getData("text/plain");
+  const text = (event.clipboardData || window.clipboardData).getData(
+    "text/plain",
+  );
 
   // insertText giữ được Ctrl+Z và tự phát sự kiện input
   if (!document.execCommand("insertText", false, text)) {
@@ -1644,7 +1738,10 @@ function bindEvents() {
   document.addEventListener("focusout", (event) => {
     if (!activeTemplateBlock) return;
     const next = event.relatedTarget;
-    if (next && (activeTemplateBlock.contains(next) || templateBar.contains(next))) {
+    if (
+      next &&
+      (activeTemplateBlock.contains(next) || templateBar.contains(next))
+    ) {
       return;
     }
     hideTemplateBar();
@@ -1682,7 +1779,9 @@ function init() {
   // Dùng bởi index.html khi in và lưu lịch sử
   window.A4Editor = {
     getMeta: () =>
-      Object.fromEntries(EXCEL_FIELDS.map((key) => [key, toText(state[key]).trim()])),
+      Object.fromEntries(
+        EXCEL_FIELDS.map((key) => [key, toText(state[key]).trim()]),
+      ),
     getIssues: () => collectIssues(buildView()).map((issue) => issue.label),
     isDirty: () => dirty,
     markSaved: () => {
