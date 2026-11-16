@@ -54,6 +54,21 @@ const FACTORY_RULES = {
   hiddenOfficerNames: "Nguyễn Thị Thu",
   // Người đề nghị thuộc Phòng Kế hoạch: tờ trình không cần thêm cột ký của đơn vị
   requestersWithoutUnitColumn: "Lê Tuấn Cường",
+  // Chữ viết tắt sau "TTr-" và ở dòng "Lưu:" của tờ trình. Mỗi dòng "Tên phòng: viết tắt"
+  deptCodes: [
+    "Văn phòng: VP",
+    "Kế hoạch: KH",
+    "Tổ chức cán bộ: TCCB",
+    "Tài chính: TC",
+    "Bảo đảm kỹ thuật: BĐKT",
+    "Phòng AIP: AIP",
+    "Phòng Bản đồ - Phương thức bay: BĐPTB",
+    "Trung tâm CSDL-HK: CSDL",
+    "Phòng NOTAM Quốc tế: NOF",
+    "Phòng An toàn chất lượng: ATCL",
+    "Trung tâm Aro/Ais Nội Bài: NB",
+    "Phòng Nghiệp vụ: NV",
+  ].join("\n"),
 };
 
 // Tuỳ chọn được ghi nhớ ngay khi bật/tắt
@@ -84,6 +99,7 @@ const LINKED_COLUMNS = ["name", "unit", "qty"];
 // Bấm chỗ hiển thị trên trang thì nhảy tới ô nhập tương ứng
 const FIELD_INPUT_ALIAS = {
   giver: () => "giverOverride",
+  deptCode: () => "deptCodeOverride",
   unitSignBefore: () =>
     usesTechUnitSigner() ? "techUnitBefore" : "representative",
 };
@@ -241,7 +257,7 @@ const PANEL_GROUPS = [
   {
     id: "rules",
     title: "Quy tắc tự động",
-    hint: "Mỗi dòng một tên. Áp dụng khi mở hồ sơ; vẫn bật/tắt tay được cho từng hồ sơ.",
+    hint: "Mỗi dòng một mục. Áp dụng khi mở hồ sơ; vẫn sửa tay được cho từng hồ sơ.",
     fields: [
       {
         key: "hiddenOfficerNames",
@@ -252,6 +268,12 @@ const PANEL_GROUPS = [
         key: "requestersWithoutUnitColumn",
         label: "Người đề nghị không cần cột ký đơn vị trên tờ trình",
         textarea: true,
+      },
+      {
+        key: "deptCodes",
+        label: "Chữ viết tắt phòng ban (mỗi dòng “Tên phòng: viết tắt”)",
+        textarea: true,
+        rows: 8,
       },
     ],
     actions: [
@@ -265,6 +287,7 @@ const PANEL_FIELDS = PANEL_GROUPS.flatMap((group) => group.fields || []);
 const REQUIRED_FIELDS = new Set([
   ...PANEL_FIELDS.filter((f) => f.required).map((f) => f.key),
   "unitSignBefore",
+  "deptCode",
 ]);
 const PEOPLE_FIELDS = PANEL_FIELDS.filter((f) => f.people).map((f) => f.key);
 
@@ -275,6 +298,7 @@ const FIELD_LABELS = (() => {
     year: "Năm",
     docNumber: "Số",
     docSymbol: "Ký hiệu",
+    deptCode: "Viết tắt phòng",
     functional1Position: "Chức vụ",
     functional2Position: "Chức vụ",
   };
@@ -344,6 +368,38 @@ const plainText = (value) =>
 function nameInList(name, listText) {
   if (!normalizeName(name)) return false;
   return splitLines(listText).some((item) => isSameName(item, name));
+}
+
+// "Phòng Bản đồ - Phương thức bay" → "ban do phuong thuc bay" (bỏ dấu, ký tự đặc biệt, chữ Phòng/Trung tâm)
+function deptKey(text) {
+  return toText(text)
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[đĐ]/g, "d")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/^(phong|trung tam)\s+/, "");
+}
+
+// Tìm chữ viết tắt theo tên phòng ban: tên phòng chứa đủ các chữ của một dòng trong danh sách
+// (dòng dài nhất được ưu tiên); không thấy thì xem tên phòng có sẵn chữ viết tắt không (vd. "Phòng BĐKT")
+function findDeptCode(department, codesText) {
+  const words = new Set(deptKey(department).split(" ").filter(Boolean));
+  if (!words.size) return "";
+
+  const hasAll = (key) => key.split(" ").every((word) => words.has(word));
+  const entries = splitLines(codesText)
+    .map((line) => line.match(/^(.*?)\s*[:=]\s*([^:=]+)$/))
+    .filter(Boolean)
+    .map(([, name, code]) => ({ key: deptKey(name), code: code.trim() }))
+    .filter((entry) => entry.key && entry.code)
+    .sort((a, b) => b.key.length - a.key.length);
+
+  const match =
+    entries.find((entry) => hasAll(entry.key)) ||
+    entries.find((entry) => hasAll(deptKey(entry.code)));
+  return match ? match.code : "";
 }
 
 // Tạo phần tử DOM gọn: h("button", { class: "btn" }, "Nội dung")
@@ -482,6 +538,7 @@ function createInitialState(row) {
     hideOfficer: false,
     showUnitColumn: true,
     giverOverride: "",
+    deptCodeOverride: "",
     equipmentName: "",
     serialNumber: "",
     docNumber: "",
@@ -507,11 +564,14 @@ function usesTechUnitSigner() {
   );
 }
 
+const getAutoDeptCode = () => findDeptCode(state.department, state.deptCodes);
+
 // Giá trị cuối cùng để hiển thị (đã tính các trường tự động)
 function buildView() {
   const view = {
     ...state,
     giver: toText(state.giverOverride).trim() || getAutoGiver(),
+    deptCode: toText(state.deptCodeOverride).trim() || getAutoDeptCode(),
     unitSignBefore: usesTechUnitSigner()
       ? state.techUnitBefore
       : state.representative,
@@ -1011,13 +1071,27 @@ function cleanTemplateNode(parent) {
   });
 }
 
+// Mẫu đã lưu từ trước khi có viết tắt phòng tự động: đổi "Lưu: VP" thành chỗ tự điền
+const TEMPLATE_UPGRADES = {
+  "toTrinh.recipients": (html) =>
+    html.includes('data-field="deptCode"')
+      ? html
+      : html.replace(/(Lưu:\s*)VP\b/, '$1<span data-field="deptCode"></span>'),
+};
+
 function initTemplates() {
   document.querySelectorAll(".page [data-persist]").forEach((block) => {
     const key = block.dataset.persist;
     factoryTemplates.set(key, sanitizeTemplate(block.innerHTML));
 
-    const saved = settings.templates[key];
-    if (typeof saved === "string") block.innerHTML = sanitizeTemplate(saved);
+    let saved = settings.templates[key];
+    if (typeof saved !== "string") return;
+
+    if (TEMPLATE_UPGRADES[key]) {
+      saved = sanitizeTemplate(TEMPLATE_UPGRADES[key](saved));
+      settings.templates[key] = saved;
+    }
+    block.innerHTML = saved;
   });
 }
 
@@ -1227,7 +1301,7 @@ function buildField(field) {
     field.multiline || field.textarea
       ? h("textarea", {
           id,
-          rows: field.textarea ? 3 : 2,
+          rows: field.rows || (field.textarea ? 3 : 2),
           "data-model": field.key,
         })
       : h("input", {
@@ -1322,11 +1396,16 @@ function buildDatesGroup() {
   return [
     h(
       "div",
-      { class: "field-grid" },
+      { class: "field-grid field-grid-2" },
       smallField("docNumber", "Số tờ trình"),
-      smallField("docSymbol", "Ký hiệu"),
       smallField("year", "Năm"),
+      smallField("docSymbol", "Ký hiệu"),
+      smallField("deptCodeOverride", "Viết tắt phòng"),
     ),
+    h("p", {
+      class: "group-hint",
+      text: "Viết tắt phòng tự lấy theo tên phòng ban, dùng sau “TTr-” và ở dòng “Lưu:” của tờ trình; danh sách sửa ở mục Quy tắc tự động.",
+    }),
     h(
       "table",
       { class: "date-table" },
@@ -1501,6 +1580,14 @@ function renderPanelState(view) {
   const giverInput = panel.querySelector('[data-model="giverOverride"]');
   if (giverInput)
     giverInput.placeholder = `Tự động: ${getAutoGiver() || "(trống)"}`;
+
+  const deptCodeInput = panel.querySelector('[data-model="deptCodeOverride"]');
+  if (deptCodeInput) {
+    const autoCode = getAutoDeptCode();
+    deptCodeInput.placeholder = autoCode
+      ? `Tự động: ${autoCode}`
+      : "Chưa có – nhập tay";
+  }
 
   panel.querySelector("[data-panel-subtitle]").textContent =
     toText(state.department) || "Chưa chọn đơn vị";

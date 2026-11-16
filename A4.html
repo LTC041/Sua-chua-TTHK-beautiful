@@ -38,9 +38,11 @@
               font-size: 14pt;
             "
           >
-            Số:
+            Số:&nbsp
+
             <span data-field="docNumber" data-blank="&nbsp;&nbsp;&nbsp;"></span
-            >/<span data-field="docSymbol"></span>
+            >/<span data-field="docSymbol"></span
+            ><span data-field="deptCode"></span>
           </p>
         </div>
 
@@ -108,7 +110,9 @@
             các nội dung kế hoạch được Tổng công ty giao điều chỉnh, bổ sung kế
             hoạch đầu năm 2026 cho Trung tâm Thông báo tin tức hàng không;
           </p>
-          <p>Căn cứ nhu cầu sử dụng của <span data-field="department"></span>;</p>
+          <p>
+            Căn cứ nhu cầu sử dụng của <span data-field="department"></span>;
+          </p>
           <p>
             <span data-field="department"></span> kính trình Giám đốc phê duyệt
             mua vật tư sửa chữa, cụ thể như sau:
@@ -194,7 +198,7 @@
         >
           <p>- Như trên;</p>
           <p>- Văn phòng;</p>
-          <p>- Lưu: VP (03b).</p>
+          <p>- Lưu: <span data-field="deptCode"></span> (03b).</p>
         </div>
       </div>
     </section>
@@ -484,7 +488,11 @@
             </p>
           </li>
           <li>
-            <p class="item-text" contenteditable="true" data-persist="sau.status">
+            <p
+              class="item-text"
+              contenteditable="true"
+              data-persist="sau.status"
+            >
               4. Tình trạng hiện tại của thiết bị: Thiết bị hoạt động bình
               thường.
             </p>
@@ -508,7 +516,9 @@
 
       <div class="footer-page flex-between">
         <div class="left-ft-page flex-column">
-          <p contenteditable="true" data-persist="sau.signPlan">PHÒNG KẾ HOẠCH</p>
+          <p contenteditable="true" data-persist="sau.signPlan">
+            PHÒNG KẾ HOẠCH
+          </p>
           <p data-field="planOffice" data-hidden-by="planOfficeHidden"></p>
         </div>
         <div class="left-ft-page flex-column">

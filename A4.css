@@ -595,6 +595,10 @@ li {
     gap: 8px;
   }
 
+  .field-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .editor-panel input[type="text"],
   .editor-panel textarea {
     width: 100%;

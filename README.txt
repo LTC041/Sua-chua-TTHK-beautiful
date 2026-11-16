@@ -15,15 +15,21 @@ SOẠN HỒ SƠ (bảng điều khiển bên trái trang A4)
 - Thiết bị sửa chữa: nhập một lần, tự hiện ở cả hai biên bản kiểm tra và phiếu báo hỏng.
 - Ngày tháng & số văn bản: năm tự lấy năm hiện tại; để trống để chừa chỗ viết tay.
   Ngày < 10 và tháng 1, 2 tự thêm số 0 (theo Nghị định 30/2020).
+- Viết tắt phòng: tự lấy theo tên phòng ban, điền sau "TTr-" (Số:    /TTr-KH) và ở dòng
+  "- Lưu: KH (03b)." của tờ trình. Gõ vào ô "Viết tắt phòng" để đổi riêng cho hồ sơ này.
+  Phòng chưa có trong danh sách thì ô "Cần kiểm tra" sẽ nhắc.
 - Người ký cố định (Phòng KH, Phòng BĐKT, đại diện chức năng, kho, kế toán...):
   sửa cho hồ sơ này, hoặc bấm "Lưu làm mặc định" để dùng cho các hồ sơ sau.
 - BB kiểm tra trước sửa chữa: Phòng BĐKT ký là Nguyễn Văn Toàn. Khi đơn vị là Phòng BĐKT,
   cột "Đơn vị sử dụng" tự đổi sang Nguyễn Đức Dũng (ô "Đơn vị sử dụng – BB trước sửa chữa,
   khi đơn vị là Phòng BĐKT"; để trống thì dùng tên trong Excel). BB sau sửa chữa không đổi.
-- Quy tắc tự động (mỗi dòng một tên):
+- Quy tắc tự động (mỗi dòng một mục):
   + Lãnh đạo đơn vị luôn ẩn tên khi in.
   + Người đề nghị không cần cột ký đơn vị trên tờ trình.
   + Người đề nghị trùng kế toán tài sản thì bên giao BB thu hồi tự đổi sang người thay.
+  + Chữ viết tắt phòng ban, mỗi dòng "Tên phòng: viết tắt" (vd. "Kế hoạch: KH").
+    Không phân biệt hoa thường, có dấu hay không, có chữ "Phòng"/"Trung tâm" hay không.
+    Thêm phòng mới thì thêm một dòng rồi bấm "Lưu làm mặc định".
 - Văn bản cần in: bỏ chọn trang không cần in (ghi nhớ cho lần sau).
 - Ô "Cần kiểm tra" liệt kê mục còn thiếu; khi bấm In cũng sẽ nhắc lại.
 
